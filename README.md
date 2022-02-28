@@ -14,91 +14,22 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d24facc3c430bb5d5aaf)
 
--   このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
 
 ## Contents
 
 <details>
 <summary><strong>Details</strong></summary>
 
--   [Persisting and Querying Time Series Data (CrateDB)](#persisting-and-querying-time-series-data-cratedb)
-    -   [Analyzing time series data](#analyzing-time-series-data)
--   [Architecture](#architecture)
--   [Prerequisites](#prerequisites)
-    -   [Docker and Docker Compose](#docker-and-docker-compose)
-    -   [Cygwin for Windows](#cygwin-for-windows)
--   [Start Up](#start-up)
--   [Connecting FIWARE to a CrateDB Database via QuantumLeap](#connecting-fiware-to-a-cratedb-database-via-quantumleap)
-    -   [CrateDB Database Server Configuration](#cratedb-database-server-configuration)
-    -   [QuantumLeap Configuration](#quantumleap-configuration)
-    -   [Grafana Configuration](#grafana-configuration)
-        -   [Generating Context Data](#generating-context-data)
-    -   [Setting up Subscriptions](#setting-up-subscriptions)
-        -   [Aggregate Filling Events](#aggregate-filling-events)
-        -   [Sample GPS Readings](#sample-gps-readings)
-        -   [Checking Subscriptions for QuantumLeap](#checking-subscriptions-for-quantumleap)
-    -   [Time Series Data Queries (QuantumLeap API)](#time-series-data-queries-quantumleap-api)
-        -   [QuantumLeap API - List the first N Sampled Values](#quantumleap-api---list-the-first-n-sampled-values)
-        -   [QuantumLeap API - List N Sampled Values at an Offset](#quantumleap-api---list-n-sampled-values-at-an-offset)
-        -   [QuantumLeap API - List the latest N Sampled Values](#quantumleap-api---list-the-latest-n-sampled-values)
-        -   [QuantumLeap API - List the Sum of values grouped by a time period](#quantumleap-api---list-the-sum-of-values-grouped-by-a-time-period)
-        -   [QuantumLeap API - List the Minimum Values grouped by a Time Period](#quantumleap-api---list-the-minimum-values-grouped-by-a-time-period)
-        -   [QuantumLeap API - List the Maximum Value over a Time Period](#quantumleap-api---list-the-maximum-value-over-a-time-period)
-        -   [QuantumLeap API - List the latest N Sampled Values of Devices near a Point](#quantumleap-api---list-the-latest-n-sampled-values-of-devices-near-a-point)
-        -   [QuantumLeap API - List the latest N Sampled Values of Devices in an Area](#quantumleap-api---list-the-latest-n-sampled-values-of-devices-in-an-area)
-    -   [Time Series Data Queries (CrateDB API)](#time-series-data-queries-cratedb-api)
-        -   [CrateDB API - Checking Data persistence](#cratedb-api---checking-data-persistence)
-        -   [CrateDB API - List the first N Sampled Values](#cratedb-api---list-the-first-n-sampled-values)
-        -   [CrateDB API - List N Sampled Values at an Offset](#cratedb-api---list-n-sampled-values-at-an-offset)
-        -   [CrateDB API - List the latest N Sampled Values](#cratedb-api---list-the-latest-n-sampled-values)
-        -   [CrateDB API - List the Sum of values grouped by a time period](#cratedb-api---list-the-sum-of-values-grouped-by-a-time-period)
-        -   [CrateDB API - List the Minimum Values grouped by a Time Period](#cratedb-api---list-the-minimum-values-grouped-by-a-time-period)
-        -   [CrateDB API - List the Maximum Value over a Time Period](#cratedb-api---list-the-maximum-value-over-a-time-period)
--   [Accessing Time Series Data Programmatically](#accessing-time-series-data-programmatically)
-    -   [Displaying CrateDB data as a Grafana Dashboard](#displaying-cratedb-data-as-a-grafana-dashboard)
-        -   [Logging in](#logging-in)
-        -   [Configuring a Data Source](#configuring-a-data-source)
-        -   [Configuring a Dashboard](#configuring-a-dashboard)
--   [Next Steps](#next-steps)
-
 </details>
 
-# Persisting and Querying Time Series Data (CrateDB)
+# Concise NGSI-LD Payloads
 
-> "Forever is composed of nows."
+> "To speak much is one thing; to speak to the point another!"
 >
-> — Emily Dickinson
+> — Sophocles, Oedipus at Colonus
 
-FIWARE [QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/) is an time-based data-persistence generic enabler
-created specifically to persist and query time-series database (currently CrateDB and TimescaleDB). The component can
-respond to NGSI-v2 or NGSI-LD subscriptions.
 
-[CrateDB](https://crate.io/) is a distributed SQL DBMS designed for use with the internet of Things. It is capable of
-ingesting a large number of data points per second and can be queried in real-time. The database is designed for the
-execution of complex queries such as geospatial and time series data. Retrieval of this historic context data allows for
-the creation of graphs and dashboards displaying trends over time.
 
-[TimescaleDB](https://www.timescale.com/) scales PostgreSQL for time-series data via automatic partitioning across time
-and space (partitioning key), yet retains the standard PostgreSQL interface. In other words, TimescaleDB exposes what
-look like regular tables, but are actually only an abstraction (or a virtual view) of many individual tables comprising
-the actual data. In combination with [PostGIS](https://postgis.net/) extension can support geo-timeseries.
-
-## Analyzing time series data
-
-The appropriate use of time series data analysis will depend on your use case and the reliability of the data
-measurements you receive. Time series data analysis can be used to answer questions such as:
-
--   What was the maximum measurement of a device within a given time period?
--   What was the average measurement of a device within a given time period?
--   What was the sum of the measurements sent by a device within a given time period?
-
-It can also be used to reduce the significance of each individual data point to exclude outliers by smoothing.
-
-#### Grafana
-
-[Grafana](https://grafana.com/) is an open source software for time series analytics tool which will be used during this
-tutorial. It integrates with a variety of time-series databases including **CrateDB** and **TimescaleDB**. It is
-available licensed under the Apache License 2.0. More information can be found at `https://grafana.com/`.
 
 #### Device Monitor
 
@@ -109,10 +40,7 @@ seen on the UltraLight device monitor web page found at: `http://localhost:3000/
 
 ![FIWARE Monitor](https://fiware.github.io/tutorials.Concise-Format/img/farm-devices.png)
 
-#### Device History
 
-Once **QuantumLeap** has started aggregating data, the historical state of each device can be seen on the device history
-web page found at: `http://localhost:3000/device/history/urn:ngsi-ld:Farm:001`
 
 ![](https://fiware.github.io/tutorials.Concise-Format/img/history-graphs.png)
 
@@ -163,6 +91,9 @@ from exposed ports.
 The overall architecture can be seen below:
 
 ![](https://fiware.github.io/tutorials.Concise-Format/img/architecture.png)
+
+The necessary configuration information can be seen in the services section of the associated `docker-compose.yml` file.
+It has been described in a previous tutorial.
 
 # Prerequisites
 
@@ -223,951 +154,806 @@ repository:
 > ./services stop
 > ```
 
-# Connecting FIWARE to a CrateDB Database via QuantumLeap
 
-In the configuration, **QuantumLeap** listens to NGSI LD notifications on port `8668` and persists historic context data
-to the **CrateDB**. **CrateDB** is accessible using port `4200` and can either be queried directly or attached to the
-Grafana analytics tool. The rest of the system providing the context data has been described in previous tutorials.
+---
 
-## CrateDB Database Server Configuration
+## Create Operations
 
-```yaml
-crate-db:
-    image: crate:4.1.4
-    hostname: crate-db
-    ports:
-        - "4200:4200"
-        - "4300:4300"
-    command:
-        crate -Clicense.enterprise=false -Cauth.host_based.enabled=false  -Ccluster.name=democluster
-        -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*"
-    environment:
-        - CRATE_HEAP_SIZE=2g
-```
+Create Operations map to HTTP POST.
 
-If CrateDB exits immediately with a
-`max virtual memory areas vm.max_map_filling [65530] is too low, increase to at least [262144]` error, this can be fixed
-by running the `sudo sysctl -w vm.max_map_filling=262144` command on the host machine. For further information look
-within the CrateDB
-[documentation](https://crate.io/docs/crate/howtos/en/latest/admin/bootstrap-checks.html#bootstrap-checks) and Docker
-[troubleshooting guide](https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting)
+-   The `/ngsi-ld/v1/entities` endpoint is used for creating new entities
+-   The `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint is used for adding new attributes
 
-## QuantumLeap Configuration
+Any newly created entity must have `id` and `type` attributes and a valid `@context` definition. All other attributes
+are optional and will depend on the system being modelled. If additional attributes are present though, each should
+specify both a `type` and a `value`.
 
-```yaml
-quantumleap:
-    image: smartsdk/quantumleap
-    hostname: quantumleap
-    ports:
-        - "8668:8668"
-    depends_on:
-        - crate-db
-    environment:
-        - CRATE_HOST=crate-db
-```
+The response will be **201 - Created** if the operation is successful or **409 - Conflict** if the operation fails.
 
-## Grafana Configuration
+### Create a New Data Entity
 
-```yaml
-grafana:
-    image: grafana/grafana
-    depends_on:
-        - cratedb
-    ports:
-        - "3003:3000"
-    environment:
-        - GF_INSTALL_PLUGINS=https://github.com/orchestracities/grafana-map-plugin/archive/master.zip;grafana-map-plugin,grafana-clock-panel,grafana-worldmap-panel
-```
-
-The `quantumleap` container is listening on one port:
-
--   The Operations for port for QuantumLeap - `8668` is where the service will be listening for notifications from the
-    Orion context broker and where users can query data from.
-
-The `CRATE_HOST` environment variable defines the location where the data will be persisted.
-
-The `cratedb` container is listening on two ports:
-
--   The Admin UI is available on port `4200`
--   The transport protocol is available on `port 4300`
-
-The `grafana` container has connected up port `3000` internally with port `3003` externally. This is because the Grafana
-UI is usually available on port `3000`, but this port has already been taken by the dummy devices UI so it has been
-shifted to another port. The Grafana Environment variables are described within their own
-[documentation](https://grafana.com/docs/installation/configuration/). The configuration ensures we will be able to
-connect to the **CrateDB** database later on in the tutorial. The configuration also imports a custom map plugin that
-helps you in displaying NGSI v2 entities over a map.
-
-### Generating Context Data
-
-For the purpose of this tutorial, we must be monitoring a system where the context is periodically being updated. The
-dummy IoT Sensors can be used to do this.
-
-Details of various buildings around the farm can be found in the tutorial application. Open
-`http://localhost:3000/app/farm/urn:ngsi-ld:Building:farm001` to display a building with an associated filling sensor
-and thermostat.
-
-![](https://fiware.github.io/tutorials.Subscriptions/img/fmis.png)
-
-Remove some hay from the barn, update the thermostat and open the device monitor page at
-`http://localhost:3000/device/monitor` and start a **Tractor** and switch on a **Smart Lamp**. This can be done by
-selecting an appropriate command from the drop-down list and pressing the `send` button. The stream of measurements
-coming from the devices can then be seen on the same page.
-
-## Setting up Subscriptions
-
-Once a dynamic context system is up and running, we need to inform **QuantumLeap** directly of changes in context. As
-expected, this is done using the subscription mechanism of the **Orion Context Broker**.
-
-Subscriptions will be covered in the next subsections. More details about subscriptions can be found in previous
-tutorials or in the [subscriptions section](https://quantumleap.readthedocs.io/en/latest/user/#orion-subscription) of
-QuantumLeap docs.
-
-### Aggregate Filling Events
-
-The rate of change of the **Filling Sensor** is driven by events in the real-world. We need to receive every event to be
-able to aggregate the results.
-
-This is done by making a POST request to the `/ngsi-ld/v1/subscriptions/` endpoint of the **Orion-LD Context Broker**.
-
--   The `NGSILD-Tenant` headers is used to filter the subscription to only listen to measurements from the attached IoT
-    Sensors
--   The `entities` `type` in the request body ensures that **QuantumLeap** will be informed of all
-    **FillingLevelSensor** data changes.
--   The `notification` URL must match the exposed port.
-
-With NGSI-LD the `observedAt` _property-of-property_ holds the timestamp of the measure. Because the attribute being
-monitored contains this _property-of-property_, the `time_index` column within the **CrateDB** database will match the
-data found within the **MongoDB** database used by the **Orion Context Broker** rather than using the creation time of
-the record within the **CrateDB** itself.
+This example adds a new **TemperatureSensor** entity to the context.
 
 #### :one: Request:
 
 ```console
-curl -L -X POST 'http://localhost:1026/ngsi-ld/v1/subscriptions/' \
--H 'Content-Type: application/ld+json' \
--H 'NGSILD-Tenant: openiot' \
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
-  "description": "Notify me of all feedstock changes",
-  "type": "Subscription",
-  "entities": [{"type": "FillingLevelSensor"}],
-  "watchedAttributes": ["filling"],
-  "notification": {
-    "attributes": ["filling", "location"],
-    "format": "normalized",
-    "endpoint": {
-      "uri": "http://quantumleap:8668/v2/notify",
-      "accept": "application/json"
-    }
-  },
-   "@context": "http://context/ngsi-context.jsonld"
+      "id": "urn:ngsi-ld:TemperatureSensor:001",
+      "type": "TemperatureSensor",
+      "category": "sensor",
+      "temperature": {
+            "value": 25,
+            "unitCode": "CEL"
+      }
 }'
 ```
 
-### Sample GPS Readings
+New entities can be added by making a POST request to the `/ngsi-ld/v1/entities` endpoint.
 
-The heart rate and GPS reading of the Animal Collars on the animals on the farm are constantly changing, we only need to
-sample the values to be able to work out relevant statistics such as minimum and maximum values and rates of change.
-
-This is done by making a POST request to the `/ngsi-ld/v1/subscriptions/` endpoint of the **Orion Context Broker** and
-including the `throttling` attribute in the request body.
-
--   The `NGSILD-Tenant` headers is used to filter the subscription to only listen to measurements from the attached IoT
-    Sensors
--   The `entities` `type` in the request body ensures that **QuantumLeap** will be informed of all **Device** data
-    changes.
--   The `notification` URL must match the exposed port.
--   The `throttling` value defines the rate that changes are sampled.
+The request will fail if the entity already exists in the context.
 
 #### :two: Request:
 
+You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request
+
 ```console
-curl -L -X POST 'http://localhost:1026/ngsi-ld/v1/subscriptions/' \
--H 'Content-Type: application/ld+json' \
--H 'NGSILD-Tenant: openiot' \
---data-raw '{
-  "description": "Notify me of animal locations",
-  "type": "Subscription",
-  "entities": [{"type": "Device"}],
-  "watchedAttributes": ["location", "status", "heartRate"],
-  "notification": {
-    "attributes": ["location", "status", "heartRate"],
-    "format": "normalized",
-    "endpoint": {
-      "uri": "http://quantumleap:8668/v2/notify",
-      "accept": "application/json"
-    }
-  },
-   "throttling": 10,
-   "@context": "http://context/ngsi-context.jsonld"
-}'
+curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
-### Checking Subscriptions for QuantumLeap
+### Create New Attributes
 
-Before anything, check the subscriptions you created in steps :one: and :two: are working (i.e., at least one
-notification for each was sent).
+This example adds a new `batteryLevel` Property and a `controlledAsset` Relationship to the existing
+**TemperatureSensor** entity with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
 #### :three: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:1026/ngsi-ld/v1/subscriptions/' \
-  -H 'NGSILD-Tenant: openiot'
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '{
+       "batteryLevel": {
+            "value": 0.9,
+            "unitCode": "C62"
+      },
+      "controlledAsset": {
+            "object": "urn:ngsi-ld:Building:barn002"
+      }
+}'
 ```
 
-#### Response:
+New attributes can be added by making a POST request to the `/ngsi-ld/v1/entities/<entity>/attrs` endpoint.
 
-```json
-[
-    {
-        "id": "urn:ngsi-ld:Subscription:601157b4bc8ec912978db6e4",
-        "type": "Subscription",
-        "description": "Notify me of all feedstock changes",
-        "entities": [
-            {
-                "type": "FillingLevelSensor"
-            }
-        ],
-        "watchedAttributes": ["filling"],
-        "notification": {
-            "attributes": ["filling"],
-            "format": "normalized",
-            "endpoint": {
-                "uri": "http://quantumleap:8668/v2/notify",
-                "accept": "application/json"
-            }
-        },
-        "@context": "http://context/ngsi-context.jsonld"
-    },
-    {
-        "id": "urn:ngsi-ld:Subscription:601157e3bc8ec912978db6e5",
-        "type": "Subscription",
-        "description": "Notify me of animal locations",
-        "entities": [
-            {
-                "type": "Device"
-            }
-        ],
-        "watchedAttributes": ["location", "state", "heartRate"],
-        "notification": {
-            "attributes": ["location", "state", "heartRate"],
-            "format": "normalized",
-            "endpoint": {
-                "uri": "http://quantumleap:8668/v2/notify",
-                "accept": "application/json"
-            }
-        },
-        "throttling": 10,
-        "@context": "http://context/ngsi-context.jsonld"
-    }
-]
-```
+The payload should consist of a JSON object holding the attribute names and values as shown.
 
-## Time Series Data Queries (QuantumLeap API)
+All `type=Property` attributes must have a `value` associated with them. All `type=Relationship` attributes must have an
+`object` associated with them which holds the URN of another entity. Well-defined common metadata elements such as
+`unitCode` can be provided as strings, all other metadata should be passed as a JSON object with its own `type` and
+`value` attributes
 
-**QuantumLeap** offers an API wrapping CrateDB backend so you can also perform multiple types of queries. The
-documentation of the API is [here](https://app.swaggerhub.com/apis/smartsdk/ngsi-tsdb/). Mind the versions. If you have
-access to your `quantumleap` container (e.g., it is running in `localhost` or port-forwarding to it), you can navigate
-its API via `http://localhost:8668/v2/ui`.
-
-### QuantumLeap API - List the first N Sampled Values
-
-Now, to check QuantumLeap is persisting values, let's get started with our first query. This example shows the first 3
-sampled `filling` values from `urn:ngsi-ld:Device:filling001`.
-
-Note the use of the `Fiware-Service` header which is the NGSI-v2 equivalent of `NGSILD-Tenant`. These are required only
-when data are pushed to Orion using such headers (in multitenancy scenarios). Failing to align these headers will result
-in no data being returned.
+Subsequent requests using the same `id` will update the value of the attribute in the context.
 
 #### :four: Request:
 
+You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request
+
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?limit=3' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
-#### Response:
+As you can see there are now two additional attributes (`batteryLevel` and `controlledAsset`) added to the entity. These
+attributes have been defined in the `@context` as part of the **Device** model and therefore can be read using their
+short names.
 
-```json
-{
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": ["2018-10-29T14:27:26", "2018-10-29T14:27:28", "2018-10-29T14:27:29"],
-        "values": [0.94, 0.87, 0.84]
-    }
-}
-```
+### Batch Create New Data Entities or Attributes
 
-### QuantumLeap API - List N Sampled Values at an Offset
-
-This example shows the fourth, fifth and sixth sampled `filling` values of `urn:ngsi-ld:Device:filling001`.
+This example uses the convenience batch processing endpoint to add three new **TemperatureSensor** entities to the
+context. Batch create uses the `/ngsi-ld/v1/entityOperations/create` endpoint.
 
 #### :five: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?offset=3&limit=3' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/ld+json' \
+--data-raw '[
+    {
+      "id": "urn:ngsi-ld:TemperatureSensor:002",
+      "type": "TemperatureSensor",
+      "category": "sensor",
+      "temperature": {
+            "value": 20,
+            "unitCode": "CEL"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:TemperatureSensor:003",
+      "type": "TemperatureSensor",
+      "category":  "sensor",
+      "temperature": {
+            "value": 2,
+            "unitCode": "CEL"
+      }
+    },
+     {
+      "id": "urn:ngsi-ld:TemperatureSensor:004",
+      "type": "TemperatureSensor",
+      "category":  "sensor",
+      "temperature": {
+            "type": "Property",
+            "value": 100,
+            "unitCode": "CEL"
+      }
+    }
+]'
 ```
 
-#### Response:
+The request will fail if any of the attributes already exist in the context. The response highlights which actions have
+been successful and the reason for failure (if any has occurred).
 
-```json
+```jsonld
 {
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": ["2018-10-29T14:23:53.804000", "2018-10-29T14:23:54.812000", "2018-10-29T14:24:00.849000"],
-        "values": [0.75, 0.63, 0.91]
-    }
+    "@context": "http://context/ngsi-context.jsonld",
+    "success": [
+        "urn:ngsi-ld:TemperatureSensor:002",
+        "urn:ngsi-ld:TemperatureSensor:003",
+        "urn:ngsi-ld:TemperatureSensor:004"
+    ],
+    "errors": []
 }
 ```
 
-### QuantumLeap API - List the latest N Sampled Values
+### Batch Create/Overwrite New Data Entities
 
-This example shows the latest three sampled `filling` values from `urn:ngsi-ld:Device:filling001`.
+This example uses the convenience batch processing endpoint to add or amend two **TemperatureSensor** entities in the
+context.
+
+-   if an entity already exists, the request will update that entity's attributes.
+-   if an entity does not exist, a new entity will be created.
 
 #### :six: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?lastN=3' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
-```
-
-#### Response:
-
-```json
-{
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": ["2018-10-29T15:03:45.113000", "2018-10-29T15:03:46.118000", "2018-10-29T15:03:47.111000"],
-        "values": [0.91, 0.67, 0.9]
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/ld+json' \
+--data-raw '[
+    {
+      "id": "urn:ngsi-ld:TemperatureSensor:002",
+      "type": "TemperatureSensor",
+      "category": "sensor",
+      "temperature": {
+            "value": 21,
+            "unitCode": "CEL"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:TemperatureSensor:003",
+      "type": "TemperatureSensor",
+      "category": "sensor",
+      "temperature": {
+            "value": 27,
+            "unitCode": "CEL"
+      }
     }
-}
+]'
 ```
 
-### QuantumLeap API - List the Sum of values grouped by a time period
+Batch processing for create/overwrite uses the `/ngsi-ld/v1/entityOperations/upsert` endpoint.
 
-This example shows last 3 total `filling` values of `urn:ngsi-ld:Device:filling001` over each minute.
+A subsequent request containing the same data (i.e. same entities and `actionType=append`) will also succeed won't
+change the context state. The `modifiedAt` metadata will be amended however.
 
-You need QuantumLeap **version >= 0.4.1**. You can check your version with a simple GET like:
+## Read Operations
 
-```console
-curl -X GET \
-  'http://localhost:8668/version' \
-  -H 'Accept: application/json'
-```
+-   The `/ngsi-ld/v1/entities` endpoint is used for listing entities
+-   The `/ngsi-ld/v1/entities/<entity>` endpoint is used for retrieving the details of a single entity.
+
+For read operations the `@context` must be supplied in a `Link` header.
+
+### Filtering
+
+-   The `options` parameter (combined with the `attrs` parameter) can be used to filter the returned fields
+-   The `q` parameter can be used to filter the returned entities
+
+### Read a Data Entity (verbose)
+
+This example reads the full context from an existing **TemperatureSensor** entity with a known `id`.
 
 #### :seven: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?aggrMethod=count&aggrPeriod=minute&lastN=3' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-d 'options=sysAttrs'
 ```
 
 #### Response:
 
-```json
+TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` is returned as _normalized_ NGSI-LD. Additional metadata is
+returned because `options=sysAttrs`. By default the `@context` is returned in the payload body (although this could be
+moved due to content negotiation if the `Accept:application/json` had been set. The full response is shown below:
+
+```jsonld
 {
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": ["2018-10-29T15:03:00.000000"],
-        "values": [8]
+    "@context": "http://context/ngsi-context.jsonld",
+    "id": "urn:ngsi-ld:TemperatureSensor:001",
+    "type": "TemperatureSensor",
+    "createdAt": "2020-08-27T14:33:06Z",
+    "modifiedAt": "2020-08-27T14:33:10Z",
+    "category": {
+        "type": "Property",
+        "createdAt": "2020-08-27T14:33:06Z",
+        "modifiedAt": "2020-08-27T14:33:06Z",
+        "value": "sensor"
+    },
+    "temperature": {
+        "type": "Property",
+        "createdAt": "2020-08-27T14:33:06Z",
+        "modifiedAt": "2020-08-27T14:33:06Z",
+        "value": 25,
+        "unitCode": "CEL"
+    },
+    "batteryLevel": {
+        "value": 0.8,
+        "type": "Property",
+        "createdAt": "2020-08-27T14:33:10Z",
+        "modifiedAt": "2020-08-27T14:33:10Z",
+        "unitCode": "C62"
+    },
+    "controlledAsset": {
+        "object": "urn:ngsi-ld:Building:barn002",
+        "type": "Relationship",
+        "createdAt": "2020-08-27T14:33:10Z",
+        "modifiedAt": "2020-08-27T14:33:10Z"
     }
 }
 ```
 
-### QuantumLeap API - List the Minimum Values grouped by a Time Period
+Individual context data entities can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity>`
+endpoint.
 
-This example shows minimum `filling` values from `urn:ngsi-ld:Device:filling001` over each minute.
+### Read an Attribute from a Data Entity
 
-<!--lint disable no-blockquote-without-marker-->
-
-> You need QuantumLeap **version >= 0.4.1**. You can check your version with a simple GET like:
-
-> ```console
-> curl -X GET \
->   'http://localhost:8668/version' \
->   -H 'Accept: application/json'
-> ```
-
-<!--lint enable no-blockquote-without-marker-->
+This example reads the value of a single attribute (`temperature`) from an existing **TemperatureSensor** entity with a
+known `id`.
 
 #### :eight: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?aggrMethod=min&aggrPeriod=minute&lastN=3' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-d 'attrs=temperature'
 ```
 
 #### Response:
 
-```json
+The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response is shown below:
+
+```jsonld
 {
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": ["2018-10-29T15:03:00.000000", "2018-10-29T15:04:00.000000", "2018-10-29T15:05:00.000000"],
-        "values": [0.63, 0.49, 0.03]
+    "@context": "http://context/ngsi-context.jsonld",
+    "id": "urn:ngsi-ld:TemperatureSensor:001",
+    "type": "TemperatureSensor",
+    "temperature": {
+        "type": "Property",
+        "value": 25,
+        "unitCode": "CEL"
     }
 }
 ```
 
-### QuantumLeap API - List the Maximum Value over a Time Period
+Because `options=keyValues` was not used this is the normalized response including the metadata such as `unitCode`.
+Context data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting
+the `attrs` using a comma separated list.
 
-This example shows maximum `filling` value of `urn:ngsi-ld:Device:filling001` that occurred between from
-`2018-06-27T09:00:00` to `2018-06-30T23:59:59`.
+### Read a Data Entity (key-value pairs)
+
+This example reads the key-value pairs from the context of an existing **TemperatureSensor** entities with a known `id`.
 
 #### :nine: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/entities/urn:ngsi-ld:Device:filling001/attrs/filling?aggrMethod=max&fromDate=2018-06-27T09:00:00&toDate=2018-06-30T23:59:59' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/json-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json' \
+-d 'options=keyValues'
 ```
 
 #### Response:
 
+The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response is shown below:
+
 ```json
 {
-    "data": {
-        "attrName": "filling",
-        "entityId": "urn:ngsi-ld:Device:filling001",
-        "index": [],
-        "values": [0.94]
-    }
+    "id": "urn:ngsi-ld:TemperatureSensor:001",
+    "type": "TemperatureSensor",
+    "category": "sensor",
+    "temperature": 25,
+    "batteryLevel": 0.8,
+    "controlledAsset": "urn:ngsi-ld:Building:barn002"
 }
 ```
 
-### QuantumLeap API - List the latest N Sampled Values of Devices near a Point
+The response contains an unfiltered list of context data from an entity containing all of the attributes of the
+`urn:ngsi-ld:TemperatureSensor:001`. The payload body does not contain an `@context` attribute since the
+`Accept: application/json` was set.
 
-This example shows the latest heart rate sampled `heartRate` values of animal that are within a 5 km radius from
-`52°31'04.8"N 13°21'25.2"E` (Tiergarten, Berlin, Germany). If you have turned on any device the animals will wander
-around the Berlin Tiergarten and on the device monitor page, you should be able to see data for
-`urn:ngsi-ld:Device:cow001` and `urn:ngsi-ld:Device:pig001` .
+Combine the `options=keyValues` parameter with the `attrs` parameter to retrieve a limited set of key-value pairs.
 
-> :information_source: **Note:** Geographical queries are only available starting from version `0.5` of QuantumLeap
-> which implements the full set of queries detailed in the Geographical Queries section of the
-> [NGSI v2 specification](http://fiware.github.io/specifications/ngsiv2/stable/).
+### Read Multiple attributes values from a Data Entity
+
+This example reads the value of two attributes (`category` and `temperature`) from the context of an existing
+**TemperatureSensor** entity with a known `id`.
 
 #### :one::zero: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/types/Device/attrs/heartRate?lastN=4&georel=near;maxDistance:5000&geometry=point&coords=52.518,13.357' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
+-H 'Link: <http://context/json-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json' \
+-d 'options=keyValues' \
+-d 'attrs=category,temperature'
 ```
 
 #### Response:
 
+The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response is shown below:
+
 ```json
 {
-    "attrName": "heartRate",
-    "entities": [
-        {
-            "entityId": "urn:ngsi-ld:Device:cow001",
-            "index": ["2021-01-27T16:52:05.925+00:00", "2021-01-27T16:52:30.769+00:00"],
-            "values": [53, 50]
-        },
-        {
-            "entityId": "urn:ngsi-ld:Device:cow002",
-            "index": ["2021-01-27T16:50:50.792+00:00"],
-            "values": [53]
-        },
-        {
-            "entityId": "urn:ngsi-ld:Device:cow004",
-            "index": ["2021-01-27T16:51:55.798+00:00"],
-            "values": [51]
-        }
-    ],
-    "entityType": "Device"
+    "id": "urn:ngsi-ld:TemperatureSensor:001",
+    "type": "TemperatureSensor",
+    "category": "sensor",
+    "temperature": 25
 }
 ```
 
-### QuantumLeap API - List the latest N Sampled Values of Devices in an Area
+Combine the `options=keyValues` parameter and the `attrs` parameter to return a list of values.
 
-This example shows the latest four sampled `filling` values of filling sensors that are inside a square of side 200 m
-centered at `52°33'16.9"N 13°23'55.0"E` (Bornholmer Straße 65, Berlin, Germany). Even if you have turned on all the
-filling sensors available on the device monitor page, you should only see data for `urn:ngsi-ld:Device:filling001`.
+### List all Data Entities (verbose)
 
-> :information_source: **Note:** Geographical queries are only available starting from version `0.5` of QuantumLeap
-> which implements the full set of queries detailed in the Geographical Queries section of the
-> [NGSI v2 specification](http://fiware.github.io/specifications/ngsiv2/stable/).
+This example lists the full context of all **TemperatureSensor** entities.
 
 #### :one::one: Request:
 
 ```console
-curl -X GET \
-  'http://localhost:8668/v2/types/Device/attrs/heartRate?lastN=4&georel=coveredBy&geometry=polygon&coords=52.5537,13.3996;52.5557,13.3996;52.5557,13.3976;52.5537,13.3976;52.5537,13.3996' \
-  -H 'Accept: application/json' \
-  -H 'Fiware-Service: openiot' \
-  -H 'Fiware-ServicePath: /'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-d 'type=TemperatureSensor'
 ```
 
 #### Response:
 
-```json
-{
-    "data": {
-        "attrName": "bpm",
-        "entities": [
-            {
-                "entityId": "urn:ngsi-ld:Device:cow001",
-                "index": [
-                    "2018-12-13T17:08:56.041",
-                    "2018-12-13T17:09:55.976",
-                    "2018-12-13T17:10:55.907",
-                    "2018-12-13T17:11:55.833"
-                ],
-                "values": [65, 63, 63, 62]
-            }
-        ],
-        "entityType": "Device"
+On start-up the context was empty, four **TemperatureSensor** entities have been added by create operations so the full
+context will now contain four sensors.
+
+```jsonld
+[
+    {
+        "@context": "http://context/ngsi-context.jsonld",
+        "id": "urn:ngsi-ld:TemperatureSensor:004",
+        "type": "TemperatureSensor",
+        "category": {
+            "type": "Property",
+            "value": "sensor"
+        },
+        "temperature": {
+            "type": "Property",
+            "value": 100,
+            "unitCode": "CEL"
+        }
+    },
+    {
+        "@context": "http://context/ngsi-context.jsonld",
+        "id": "urn:ngsi-ld:TemperatureSensor:002",
+        "type": "TemperatureSensor",
+        "category": {
+            "type": "Property",
+            "value": "sensor"
+        },
+        "temperature": {
+            "type": "Property",
+            "value": 21,
+            "unitCode": "CEL"
+        }
+    },
+    {
+        "@context": "http://context/ngsi-context.jsonld",
+        "id": "urn:ngsi-ld:TemperatureSensor:003",
+        "type": "TemperatureSensor",
+        "category": {
+            "type": "Property",
+            "value": "sensor"
+        },
+        "temperature": {
+            "type": "Property",
+            "value": 27,
+            "unitCode": "CEL"
+        }
+    },
+    {
+        "@context": "http://context/ngsi-context.jsonld",
+        "id": "urn:ngsi-ld:TemperatureSensor:001",
+        "type": "TemperatureSensor",
+        "batteryLevel": {
+            "type": "Property",
+            "value": 0.8,
+            "unitCode": "C62"
+        },
+        "category": {
+            "type": "Property",
+            "value": "sensor"
+        },
+        "controlledAsset": {
+            "type": "Relationship",
+            "object": "urn:ngsi-ld:Building:barn002"
+        },
+        "temperature": {
+            "type": "Property",
+            "value": 25,
+            "unitCode": "CEL"
+        }
     }
-}
+]
 ```
 
-## Time Series Data Queries (CrateDB API)
+### List all Data Entities (key-value pairs)
 
-**CrateDB** offers an [HTTP Endpoint](https://crate.io/docs/crate/reference/en/latest/interfaces/http.html) that can be
-used to submit SQL queries. The endpoint is accessible under `<servername:port>/_sql`.
-
-SQL statements are sent as the body of POST requests in JSON format, where the SQL statement is the value of the `stmt`
-attribute.
-
-> When to query **CrateDB** and when **QuantumLeap**?. As a rule of thumb, prefer working always with **QuantumLeap**
-> for the following reasons:
->
-> -   Your experience will be closer to FIWARE NGSI APIs like Orion's.
-> -   Your application will not be tied to CrateDB's specifics nor QuantumLeap's implementation details, which could
->     change and break your app.
-> -   QuantumLeap can be easily extended to other backends and your app will get compatibility for free.
-> -   If your deployment is distributed, you won't need to expose the ports of your database to the outside.
-
-If your are sure your query is not supported by **QuantumLeap**, you may have to end up querying **CrateDB**, however,
-please open an issue in [QuantumLeap's GitHub repository](https://github.com/orchestracities/ngsi-timeseries-api/issues)
-so the team is aware.
-
-### CrateDB API - Checking Data persistence
-
-Another way to see if data are being persisted is to check if a `table_schema` has been created. This can be done by
-making a request to the **CrateDB** HTTP endpoint as shown:
+This example lists the `temperature` attribute of all **TemperatureSensor** entities.
 
 #### :one::two: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SHOW SCHEMAS"}'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
+-H 'Link: <http://context/json-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json' \
+-d 'type=TemperatureSensor' \
+-d 'options=keyValues' \
+-d 'attrs=temperature'
 ```
 
 #### Response:
 
+The full context contains four sensors, they are returned in a random order:
+
 ```json
-{
-    "cols": ["schema_name"],
-    "rows": [["blob"], ["doc"], ["information_schema"], ["mtopeniot"], ["pg_catalog"], ["sys"]],
-    "rowcount": 6,
-    "duration": 20.3418
-}
+[
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:004",
+        "type": "TemperatureSensor",
+        "temperature": 100
+    },
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:002",
+        "type": "TemperatureSensor",
+        "temperature": 21
+    },
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:003",
+        "type": "TemperatureSensor",
+        "temperature": 27
+    },
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:001",
+        "type": "TemperatureSensor",
+        "temperature": 25
+    }
+]
 ```
 
-Schema names are formed with the `mt` prefix followed by `NGSILD-Tenant` header in lower case. The IoT Agent is
-forwarding measurements from the dummy IoT devices, with the `NGSILD-Tenant` header `openiot`. These are being persisted
-under the `mtopeniot` schema.
+Full context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/`
+endpoint and supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs`
+parameter to retrieve key-values.
 
-If the `mtopeniot` does not exist, then the subscription to **QuantumLeap** has not been set up correctly. Check that
-the subscription exists, and has been configured to send data to the correct location.
+### Filter Data Entities by ID
 
-**QuantumLeap** will persist data into separate tables within the **CrateDB** database based on the entity type. Table
-names are formed with the `et` prefix and the entity type name in lowercase.
+This example lists selected data from two **TemperatureSensor** entities chosen by `id`. Note that every `id` must be
+unique, so `type` is not required for this request. To filter by `id` add the entries in a comma delimited list.
 
 #### :one::three: Request:
 
 ```console
-curl -X POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SHOW TABLES"}'
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
+-H 'Link: <http://context/json-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json' \
+-d 'id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002' \
+-d 'options=keyValues' \
+-d 'attrs=temperature'
 ```
 
 #### Response:
 
+The response details the selected attributes from the selected entities.
+
 ```json
-{
-    "cols": ["table_schema", "table_name"],
-    "rows": [
-        ["mtopeniot", "etFillingLevelSensor"],
-        ["mtopeniot", "etdevice"]
-    ],
-    "rowcount": 3,
-    "duration": 14.2762
-}
+[
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:002",
+        "type": "TemperatureSensor",
+        "temperature": 21
+    },
+    {
+        "id": "urn:ngsi-ld:TemperatureSensor:001",
+        "type": "TemperatureSensor",
+        "temperature": 25
+    }
+]
 ```
 
-The response shows that both **Filling Sensor** data and **Animal Collar Device** data are being persisted in the
-database.
+## Update Operations
 
-### CrateDB API - List the first N Sampled Values
+Overwrite operations are mapped to HTTP PATCH:
 
-The SQL statement uses `ORDER BY` and `LIMIT` clauses to sort the data. More details can be found under within the
-**CrateDB** [documentation](https://crate.io/docs/crate/reference/en/latest/sql/statements/select.html)
+-   The `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint is used to update an attribute
+-   The `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint is used to update multiple attributes
+
+### Overwrite the value of an Attribute value
+
+This example updates the value of the `category` attribute of the Entity with `id=urn:ngsi-ld:TemperatureSensor:001`
 
 #### :one::four: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT * FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\'' ORDER BY time_index ASC LIMIT 3"}'
+curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '{
+    "value": ["sensor", "actuator"],
+    "type": "Property"
+}'
 ```
 
-#### Response:
+Existing attribute values can be altered by making a PATCH request to the
+`/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint. The appropriate `@context` should be supplied as a `Link`
+header.
 
-```json
-{
-    "cols": ["entity_id", "entity_type", "fiware_servicepath", "filling", "time_index"],
-    "rows": [
-        ["urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 0.87, 1530262765000],
-        ["urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 0.65, 1530262770000],
-        ["urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 0.6, 1530262775000]
-    ],
-    "rowcount": 3,
-    "duration": 21.8338
-}
-```
+### Overwrite Multiple Attributes of a Data Entity
 
-### CrateDB API - List N Sampled Values at an Offset
-
-The SQL statement uses an `OFFSET` clause to retrieve the required rows. More details can be found under within the
-**CrateDB** [documentation](https://crate.io/docs/crate/reference/en/latest/sql/statements/select.html).
+This example simultaneously updates the values of both the `category` and `controlledAsset` attributes of the Entity
+with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
 #### :one::five: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT * FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\'' order by time_index ASC LIMIT 3 OFFSET 3"}'
+curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '{
+      "category": {
+            "value": [
+                  "sensor",
+                  "actuator"
+            ],
+            "type": "Property"
+      },
+      "controlledAsset": {
+            "type": "Relationship",
+            "object": "urn:ngsi-ld:Building:barn001"
+      }
+}'
 ```
 
-#### Response:
+### Batch Update Attributes of Multiple Data Entities
 
-```json
-{
-    "cols": ["filling", "entity_id", "entity_type", "fiware_servicepath", "time_index"],
-    "rows": [
-        [0.75, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530262791452],
-        [0.63, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530262792469],
-        [0.5, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530262793472]
-    ],
-    "rowcount": 3,
-    "duration": 54.215
-}
-```
-
-### CrateDB API - List the latest N Sampled Values
-
-The SQL statement uses an `ORDER BY ... DESC` clause combined with a `LIMIT` clause to retrieve the last N rows. More
-details can be found under within the **CrateDB**
-[documentation](https://crate.io/docs/crate/reference/en/latest/sql/statements/select.html).
+This example uses the convenience batch processing endpoint to update existing sensors.
 
 #### :one::six: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT * FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\''  ORDER BY time_index DESC LIMIT 3"}'
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '[
+  {
+    "id": "urn:ngsi-ld:TemperatureSensor:003",
+    "type": "TemperatureSensor",
+    "category": {
+      "type": "Property",
+      "value": [
+        "actuator",
+        "sensor"
+      ]
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:TemperatureSensor:004",
+    "type": "TemperatureSensor",
+    "category": {
+      "type": "Property",
+      "value": [
+        "actuator",
+        "sensor"
+      ]
+    }
+  }
+]'
 ```
 
-#### Response:
+Batch processing uses the `/ngsi-ld/v1/entityOperations/upsert` endpoint. The payload body holds an array of the
+entities and attributes we wish to update. The `options=update` parameter indicates we will not remove existing
+attributes if they already exist and have not been included in the payload.
 
-```json
-{
-    "cols": ["filling", "entity_id", "entity_type", "fiware_servicepath", "time_index"],
-    "rows": [
-        [0.51, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530263896550],
-        [0.43, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530263894491],
-        [0.4, "urn:ngsi-ld:Device:filling001", "FillingLevelSensor", "/", 1530263892483]
-    ],
-    "rowcount": 3,
-    "duration": 18.591
-}
-```
+An alternative would be to use the `/ngsi-ld/v1/entityOperations/update` endpoint. Unlike `upsert`, the `update`
+operation will not silently create any new entities - it fails if the entities do not already exist.
 
-### CrateDB API - List the Sum of values grouped by a time period
+### Batch Replace Entity Data
 
-The SQL statement uses a `SUM` function and `GROUP BY` clause to retrieve the relevant data. **CrateDB** offers a range
-of
-[Date-Time Functions](https://crate.io/docs/crate/reference/en/latest/general/builtins/scalar.html#date-and-time-functions)
-to truncate and convert the timestamps into data which can be grouped.
+This example uses the convenience batch processing endpoint to replace entity data of existing sensors.
 
 #### :one::seven: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT DATE_FORMAT (DATE_TRUNC ('\''minute'\'', time_index)) AS minute, SUM (filling) AS sum FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\'' GROUP BY minute LIMIT 3"}'
+curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '[
+  {
+    "id": "urn:ngsi-ld:TemperatureSensor:003",
+    "type": "TemperatureSensor",
+    "category": {
+      "type": "Property",
+      "value": [
+        "actuator",
+        "sensor"
+      ]
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:TemperatureSensor:004",
+    "type": "TemperatureSensor",
+    "temperature": {
+      "type": "Property",
+      "value": [
+        "actuator",
+        "sensor"
+      ]
+    }
+  }
+]'
 ```
 
-#### Response:
+Batch processing uses the `/ngsi-ld/v1/entityOperations/update` endpoint with a payload with the - `options=replace`
+parameter, this means we will overwrite existing entities. `/ngsi-ld/v1/entityOperations/upsert` could also be used if
+new entities are also to be created.
 
-```json
-{
-    "cols": ["minute", "sum"],
-    "rows": [
-        ["2018-06-29T09:17:00.000000Z", 4.37],
-        ["2018-06-29T09:34:00.000000Z", 6.23],
-        ["2018-06-29T09:08:00.000000Z", 6.51],
-        ["2018-06-29T09:40:00.000000Z", 3],
-        ...etc
-    ],
-    "rowcount": 42,
-    "duration": 22.9832
-}
-```
+## Delete Operations
 
-### CrateDB API - List the Minimum Values grouped by a Time Period
+Delete Operations map to HTTP DELETE.
 
-The SQL statement uses a `MIN` function and `GROUP BY` clause to retrieve the relevant data. **CrateDB** offers a range
-of
-[Date-Time Functions](https://crate.io/docs/crate/reference/en/latest/general/builtins/scalar.html#date-and-time-functions)
-to truncate and convert the timestamps into data which can be grouped.
+-   The `/ngsi-ld/v1/entities/<entity-id>` endpoint can be used to delete an entity
+-   The `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint can be used to delete an attribute
+
+The response will be **204 - No Content** if the operation is successful or **404 - Not Found** if the operation fails.
+
+### Data Relationships
+
+If there are entities within the context which relate to one another, you must be careful when deleting an entity. You
+will need to check that no references are left dangling once the entity has been deleted.
+
+Organizing a cascade of deletions is beyond the scope of this tutorial, but it would be possible using a batch delete
+request.
+
+### Delete an Entity
+
+This example deletes the entity with `id=urn:ngsi-ld:TemperatureSensor:004` from the context.
 
 #### :one::eight: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT DATE_FORMAT (DATE_TRUNC ('\''minute'\'', time_index)) AS minute, MIN (filling) AS min FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\'' GROUP BY minute"}'
+curl -iX DELETE 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:004'
 ```
 
-#### Response:
+Entities can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>` endpoint.
 
-```json
-{
-    "cols": ["minute", "min"],
-    "rows": [
-        ["2018-06-29T09:34:00.000000Z", 0.5],
-        ["2018-06-29T09:17:00.000000Z", 0.04],
-        ["2018-06-29T09:40:00.000000Z", 0.33],
-        ["2018-06-29T09:08:00.000000Z", 0.44],
-        ...etc
-    ],
-    "rowcount": 40,
-    "duration": 13.1854
-}
-```
+Subsequent requests using the same `id` will result in an error response since the entity no longer exists in the
+context.
 
-### CrateDB API - List the Maximum Value over a Time Period
+### Delete an Attribute from an Entity
 
-The SQL statement uses a `MAX` function and a `WHERE` clause to retrieve the relevant data. **CrateDB** offers a range
-of [Aggregate Functions](https://crate.io/docs/crate/reference/en/latest/general/dql/selects.html#data-aggregation) to
-aggregate data in different ways.
+This example removes the `batteryLevel` attribute from the entity with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
 #### :one::nine: Request:
 
 ```console
-curl -iX POST \
-  'http://localhost:4200/_sql' \
-  -H 'Content-Type: application/json' \
-  -d '{"stmt":"SELECT MAX(filling) AS max FROM mtopeniot.etFillingLevelSensor WHERE entity_id = '\''urn:ngsi-ld:Device:filling001'\'' and time_index >= '\''2018-06-27T09:00:00'\'' and time_index < '\''2018-06-30T23:59:59'\''"}'
+curl -L -X DELETE 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/batteryLevel' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+```
+
+Attributes can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>/attrs/<attribute>` endpoint.
+It is important to supply the appropriate `@context` in the request in the form of a `Link` header to ensure that the
+attribute name can be recognised.
+
+If the entity does not exist within the context or the attribute cannot be found on the entity, the result will be an
+error response.
+
+### Batch Delete Multiple Entities
+
+This example uses the convenience batch processing endpoint to delete some **TemperatureSensor** entities.
+
+#### :two::zero: Request:
+
+```console
+curl -L -X POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/delete' \
+-H 'Content-Type: application/json' \
+--data-raw '[
+  "urn:ngsi-ld:TemperatureSensor:002",
+  "urn:ngsi-ld:TemperatureSensor:003"
+]'
+```
+
+Batch processing uses the `/ngsi-ld/v1/entityOperations/delete` endpoint with a payload consisting of an array of
+elements to delete.
+
+If an entity does not exist in the context, the result will be an error response.
+
+### Batch Delete Multiple Attributes from an Entity
+
+This example uses the PATCH `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint to delete some attributes from a
+**TemperatureSensor** entity.
+
+#### :two::one: Request:
+
+```console
+curl -L -X PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
+-H 'Content-Type: application/json' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+--data-raw '{
+      "category": {
+            "value": null,
+            "type": "Property"
+      },
+      "controlledAsset": {
+            "type": "Relationship",
+            "object": null
+      }
+}'
+```
+
+If a value is set to `null` the attribute is deleted.
+
+### Find existing data relationships
+
+This example returns a header indicating whether any linked data relationships remain against the entity
+`urn:ngsi-ld:Building:barn002`
+
+#### :two::two: Request:
+
+```console
+curl -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/?type=TemperatureSensor&limit=0&count=true&q=controlledAsset==%22urn:ngsi-ld:Building:barn002%22' \
+-H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json'
 ```
 
 #### Response:
 
 ```json
-{
-    "cols": ["max"],
-    "rows": [[1]],
-    "rowcount": 1,
-    "duration": 26.7215
-}
+[]
 ```
 
-# Accessing Time Series Data Programmatically
+Because the `limit=0` parameter has been used **no entities** are listed in the payload body, however the `count=true`
+means that the count is passed as a header instead:
 
-Once the JSON response for a specified time series has been retrieved, displaying the raw data is of little use to an
-end user. It must be manipulated to be displayed in a bar chart, line graph or table listing. This is not within the
-domain of **QuantumLeap** as it not a graphical tool, but can be delegated to a mashup or dashboard component such as
-[Wirecloud](https://github.com/FIWARE/catalogue/blob/master/processing/README.md#Wirecloud) or
-[Knowage](https://github.com/FIWARE/catalogue/blob/master/processing/README.md#Knowage).
-
-It can also be retrieved and displayed using a third-party graphing tool appropriate to your coding environment - for
-example [chartjs](http://www.chartjs.org/). An example of this can be found within the `history` controller in the
-[Git Repository](https://github.com/FIWARE/tutorials.Step-by-Step/blob/master/context-provider/controllers/history.js).
-
-The basic processing consists of two-step - retrieval and attribute mapping, sample code can be seen below:
-
-```javascript
-function readCrateSensorfilling(id, aggMethod) {
-    return new Promise(function (resolve, reject) {
-        const sqlStatement =
-            "SELECT DATE_FORMAT (DATE_TRUNC ('minute', time_index)) AS minute, " +
-            aggMethod +
-            "(filling) AS " +
-            aggMethod +
-            " FROM mtopeniot.etFillingLevelSensor WHERE entity_id = 'urn:ngsi-ld:Device:" +
-            id +
-            "' GROUP BY minute ORDER BY minute";
-        const options = {
-            method: "POST",
-            url: crateUrl,
-            headers: { "Content-Type": "application/json" },
-            body: { stmt: sqlStatement },
-            json: true,
-        };
-        request(options, (error, response, body) => {
-            return error ? reject(error) : resolve(body);
-        });
-    });
-}
+```text
+NGSILD-Results-Count: 1
 ```
 
-```javascript
-function crateToTimeSeries(crateResponse, aggMethod, hexColor) {
-    const data = [];
-    const labels = [];
-    const color = [];
-
-    if (crateResponse && crateResponse.rows && crateResponse.rows.length > 0) {
-        _.forEach(crateResponse.rows, (element) => {
-            const date = moment(element[0]);
-            data.push({ t: date, y: element[1] });
-            labels.push(date.format("HH:mm"));
-            color.push(hexColor);
-        });
-    }
-
-    return {
-        labels,
-        data,
-        color,
-    };
-}
-```
-
-The modified data is then passed to the frontend to be processed by the third-party graphing tool. The result is shown
-here: `http://localhost:3000/device/history/urn:ngsi-ld:Farm:001`.
-
-## Displaying CrateDB data as a Grafana Dashboard
-
-**CrateDB** has been chosen as the time-series data sink for QuantumLeap, because, among
-[many other benefits](https://quantumleap.readthedocs.io/en/latest/), it integrates seamlessly with the
-[Grafana](https://grafana.com/) time series analytics tool. Grafana can be used to display the aggregated sensor data -
-a full tutorial on building dashboards can be found [here](https://www.youtube.com/watch?v=sKNZMtoSHN4). The simplified
-instructions below summarize how to connect and display a graph of the FillingLevelSensor `filling` data.
-
-### Logging in
-
-The `docker-compose` file has started an instance of the Grafana UI listening on port `3003`, so the login page can be
-found at: `http://localhost:3003/login`. The default username is `admin` and the default password is `admin`.
-
-### Configuring a Data Source
-
-After logging in, a PostgreSQL datasource must be set up at `http://localhost:3003/datasources` with the following
-values:
-
--   **Name** `CrateDB`
--   **Host** `crate-db:5432`
--   **Database** `mtopeniot`
--   **User** `crate`
--   **SSL Mode** `disable`
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-crate-connect.png)
-
-Click on the Save and test button and make sure it says _Database Connection OK_.
-
-### Configuring a Dashboard
-
-To display a new dashboard, you can either click the **+** button and select **Dashboard** or go directly to
-`http://localhost:3003/dashboard/new?orgId=1`. Thereafter click **Add Query**.
-
-The following values in **bold text** need to be placed in the graphing wizard:
-
--   Queries to **CrateDB** (the previously created Data Source)
--   FROM **etFillingLevelSensor**
--   Time column **time_index**
--   Metric column **entity_id**
--   Select value **column:filling**
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-lamp-graph.png)
-
-Then click on `ESC` on your keyboard and you will see a dashboard including the graph you created.
-
-The click on the `Add Panel` button and select `Choose Visualisation` and pick `Map panel`.
-
-In the map layout options set the following values:
-
--   Center: **custom**
--   Latitude: **52.5031**
--   Longitude: **13.4447**
--   Initial Zoom: **12**
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-lamp-map-config-1.png)
-
-Click on `Queries` tab on the left and set as follows:
-
--   Format as: **Table**
--   FROM **etFillingLevelSensor**
--   Time column **time_index**
--   Metric column **entity_id**
--   Select value
-    -   **column:filling** **alias:value**
-    -   **column:location** **alias:geojson**
-    -   **column:entity_type** **alias:type**
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-lamp-map-config-2.png)
-
-Click on `Visualisation` tab on the left and set as follows:
-
--   Map Layers:
-    -   FillingLevelSensor:
-        -   Icon: **lightbulb-o**
-        -   ClusterType: **average**
-        -   ColorType: **fix**
-        -   Column for value: **value**
-        -   Maker color: **red**
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-lamp-map-config-3.png)
-
-The final result can be seen below:
-
-![](https://fiware.github.io/tutorials.Concise-Format/img/grafana-result.png)
+If `limit` was not present the payload would hold the details of every matching entity instead.
 
 # Next Steps
 
 Want to learn how to add more complexity to your application by adding advanced features? You can find out by reading
-the other [tutorials in this series](https://ngsi-ld-tutorials.readthedocs.io/)
+the other [tutorials in this series](https://ngsi-ld-tutorials.rtfd.io)
 
 ---
 
 ## License
 
-[MIT](LICENSE) © 2018-2020 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2022 FIWARE Foundation e.V.
