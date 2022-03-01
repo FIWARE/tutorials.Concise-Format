@@ -28,6 +28,124 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 >
 > — Sophocles, Oedipus at Colonus
 
+The NGSI-LD API is a flexible mechanism for producing context data in mulitple formats.
+This was demonstrated in the initial Getting Started [tutorial](https://github.com/FIWARE/tutorials.Getting-Started/tree/NGSI-LD) where both "normalized" and "key-values" pairs format were produced. The default, verbose data format is so-called "normalized" NGSI-LD where every **Property** is defined by `"type": "Property`
+and every **Relationship** is defined by `"type": "Relationship`. These keywords ( `type`, `Property` and `Relationship`) are in turn strictly defined JSON-LD terms which can be found in the core @context served with every request.
+
+
+### Normalized NGSI-LD
+
+The full "normalized" form is an excellent choice for data exchange, since through the  the `@context` and the definition of JSON-LD keywords, machines are given all the tools to fully comprehend
+the payload format. Responses return the complete current state of each entity, with payloads  all including sub-attributes such as Properties-of-Properties,
+Properties-of-Relationships and other standard metadata terms like `observedAt` and `unitCode`. Furthermore normalized payloads are exceedingly regular and parseable, and can easily be reduced down to the relevant `value` elements if such an operation necessary. However with the normalized format, is necessary to repeatedly supply common defining attributes such as `"type": "Property` throughout the payload to ensure that machines can fully understand the data represented.
+
+#### Normalized NGSI-LD using `options=normalized`
+
+```json
+{
+  "@context": [
+    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+  ],
+  "id": "urn:nsgi-ld:Beatle:John_Lennon",
+  "type": "Beatle",
+  "age": {"type": "Property", "value":  40, "unitCode" : "ANN"},
+  "name": {"type": "Property", "value": "John Lennon"},
+  "born": {"type": "Property", "value": "1940-10-09"},
+  "spouse": {
+    "type": "Relationship",
+    "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [-73.975, 40.775556]
+    }
+  }
+}
+```
+
+
+Open in [**JSON-LD Playground**](https://tinyurl.com/4nw9z83m)
+
+
+
+### Simplified NGSI-LD
+
+The use of the normalized format can be contrast with the "key-values" pairs format, which is a simplified version concentrating purely on the values of the first level of attributes only. The payloads are remain regular, but are much shorter and to the point, and not all information is returned by the request - `unitCode` and `observedAt` will not be returned in the payload.
+
+#### Simplified NGSI-LD using `options=keyValues`
+
+```json
+{
+  "@context": [
+    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+  ],
+  "@id": "urn:nsgi-ld:Beatle:John_Lennon",
+  "name": "John Lennon",
+  "born": "1940-10-09",
+  "spouse": "urn:nsgi-ld:Person:Cynthia_Lennon",
+  "age": 40,
+  "location": {
+    "type": "Point",
+    "coordinates": [-73.975, 40.775556]
+  }
+}
+```
+
+
+Open in [**JSON-LD Playground**](https://tinyurl.com/2p93h8p6)
+
+
+This key-values payload matches the simple JSON-LD payload which can be seen on the front-page of the official [JSON-LD website](https://json-ld.org/)
+
+Both normalized and key-values NGSI-LD formats are valid JSON-LD, but since the key-values format is lossy, until recently, all updates to an NGSI-LD context broker must be made using the normalized format.
+
+### Concise NGSI-LD
+
+To make the API easier to use and reduce the burden on developers, NGSI-LD now accepts an intermediate "concise" format which still offers all of the context data in the payload, but
+removes the redundancy of repeatedly adding `"type": "Property` throughout each payload. The concise representation is a terser, lossless form of the normalized representation, where redundant "type" members are omitted and the following rules are applied:
+
+-  Every **Property**  without further sub-attributes is represented by the Property value only.
+-  Every **Property**  that includes  further sub-attributes is represented by a value key-value pair.
+-  Every **GeoProperty**  without further sub-attributes is represented by the GeoProperty’s  GeoJSON representation only
+-  Every **GeoProperty**  that includes  further sub-attributes is represented by a value key-value pair.
+-  Every **LanguageProperty** is defined by a languageMap key-value pair.
+-  Every **Relationship** is defined by an object key-value pair.
+
+
+
+#### Concise NGSI-LD using `options=concise`
+
+```json
+{
+  "@context": [
+    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+  ],
+  "@id": "urn:nsgi-ld:Beatle:John_Lennon",
+  "name": "John Lennon",
+  "born": "1940-10-09",
+  "spouse": {
+    "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+  },
+  "age": {"value":  40, "unitCode" : "ANN"},
+  "location": {
+    "type": "Point",
+    "coordinates": [-73.975, 40.775556]
+  }
+}
+```
+
+
+
+
+In summary, all formats provide a regular, well-defined payload, but the "normalized" format
+is verbose and lossless, "key-values" is short and lossy, and third format - "concise" is an
+intermediate format created to bridge the gap between the two.
+
 
 
 
@@ -47,10 +165,9 @@ seen on the UltraLight device monitor web page found at: `http://localhost:3000/
 # Architecture
 
 This application builds on the components and dummy IoT devices created in
-[previous tutorials](https://github.com/FIWARE/tutorials.IoT-Agent/). It will use three FIWARE components: the
-[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), the
-[IoT Agent for Ultralight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/), and
-[QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/) .
+[previous tutorials](https://github.com/FIWARE/tutorials.IoT-Agent/). It will use two FIWARE components: the
+[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) and the
+[IoT Agent for Ultralight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/).
 
 Therefore the overall architecture will consist of the following elements:
 
@@ -64,8 +181,6 @@ Therefore the overall architecture will consist of the following elements:
         and convert them to
         [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
         commands for the devices
-    -   FIWARE [QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/) subscribed to context changes and
-        persisting them into a **CrateDB** database
 
 -   A [MongoDB](https://www.mongodb.com/) database:
 
@@ -73,10 +188,6 @@ Therefore the overall architecture will consist of the following elements:
         registrations
     -   Used by the **IoT Agent** to hold device information such as device URLs and Keys
 
--   A [CrateDB](https://crate.io/) database:
-
-    -   Used as a data sink to hold time-based historical context data
-    -   offers an HTTP endpoint to interpret time-based data queries
 
 -   An HTTP **Web-Server** which offers static `@context` files defining the context entities within the system.
 -   The **Tutorial Application** does the following:
