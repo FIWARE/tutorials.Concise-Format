@@ -6,19 +6,50 @@
 <br/> [![JSON LD](https://img.shields.io/badge/JSON--LD-1.1-f06f38.svg)](https://w3c.github.io/json-ld-syntax/)
 [![Documentation](https://img.shields.io/readthedocs/fiware-tutorials.svg)](https://fiware-tutorials.rtfd.io)
 
-This tutorial introduces the concise NGSI-LD format and demonstrates its use and explains
-the differences between concise and normalized NGSI-LD payloads.
+This tutorial introduces the concise NGSI-LD format and demonstrates its use and explains the differences between
+concise and normalized NGSI-LD payloads.
 
 The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also available as
 [Postman documentation](https://fiware.github.io/tutorials.Concise-Format/ngsi-ld.html)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d24facc3c430bb5d5aaf)
 
-
 ## Contents
 
 <details>
 <summary><strong>Details</strong></summary>
+
+-   [Concise NGSI-LD Payloads](#concise-ngsi-ld-payloads)
+    -   [NGSI-LD Payloads](#ngsi-ld-payloads)
+        -   [Normalized NGSI-LD](#normalized-ngsi-ld)
+        -   [Simplified NGSI-LD](#simplified-ngsi-ld)
+        -   [Concise NGSI-LD](#concise-ngsi-ld)
+-   [Architecture](#architecture)
+-   [Prerequisites](#prerequisites)
+    -   [Docker and Docker Compose](#docker-and-docker-compose)
+    -   [Cygwin for Windows](#cygwin-for-windows)
+-   [Start Up](#start-up)
+-   [Concise NGSI-LD Operations](#concise-ngsi-ld-operations)
+    -   [Create Operations](#create-operations)
+        -   [Create a New Data Entity](#create-a-new-data-entity)
+        -   [Create New Attributes](#create-new-attributes)
+        -   [Batch Create New Data Entities or Attributes](#batch-create-new-data-entities-or-attributes)
+        -   [Batch Create/Overwrite New Data Entities](#batch-createoverwrite-new-data-entities)
+    -   [Read Operations](#read-operations)
+        -   [Filtering](#filtering)
+        -   [Read a Data Entity (concise)](#read-a-data-entity-concise)
+        -   [Read an Attribute from a Data Entity](#read-an-attribute-from-a-data-entity)
+        -   [Read a Data Entity (concise)](#read-a-data-entity-concise-1)
+        -   [Read Multiple attributes values from a Data Entity](#read-multiple-attributes-values-from-a-data-entity)
+        -   [List all Data Entities (concise)](#list-all-data-entities-concise)
+        -   [List all Data Entities (filtered)](#list-all-data-entities-filtered)
+        -   [Filter Data Entities by ID](#filter-data-entities-by-id)
+        -   [Returning data as GeoJSON](#returning-data-as-geojson)
+    -   [Update Operations](#update-operations)
+        -   [Overwrite the value of an Attribute value](#overwrite-the-value-of-an-attribute-value)
+        -   [Overwrite Multiple Attributes of a Data Entity](#overwrite-multiple-attributes-of-a-data-entity)
+        -   [Batch Update Attributes of Multiple Data Entities](#batch-update-attributes-of-multiple-data-entities)
+        -   [Batch Replace Entity Data](#batch-replace-entity-data)
 
 </details>
 
@@ -28,126 +59,135 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 >
 > — Sophocles, Oedipus at Colonus
 
-The NGSI-LD API is a flexible mechanism for producing context data in mulitple formats.
-This was demonstrated in the initial Getting Started [tutorial](https://github.com/FIWARE/tutorials.Getting-Started/tree/NGSI-LD) where both "normalized" and "key-values" pairs format were produced. The default, verbose data format is so-called "normalized" NGSI-LD where every **Property** is defined by `"type": "Property`
-and every **Relationship** is defined by `"type": "Relationship`. These keywords ( `type`, `Property` and `Relationship`) are in turn strictly defined JSON-LD terms which can be found in the core @context served with every request.
+The NGSI-LD API is a flexible mechanism for producing context data in mulitple formats. This was demonstrated in the
+initial Getting Started [tutorial](https://github.com/FIWARE/tutorials.Getting-Started/tree/NGSI-LD) where both
+"normalized" and "key-values" pairs format were produced. The default, verbose data format is so-called "normalized"
+NGSI-LD where every **Property** is defined by `"type": "Property` and every **Relationship** is defined by
+`"type": "Relationship`. These keywords ( `type`, `Property` and `Relationship`) are in turn strictly defined JSON-LD
+terms which can be found in the core @context served with every request.
 
 ## NGSI-LD Payloads
 
 ### Normalized NGSI-LD
 
-The full "normalized" form is an excellent choice for data exchange, since through the  the `@context` and the definition of JSON-LD keywords, machines are given all the tools to fully comprehend
-the payload format. Responses return the complete current state of each entity, with payloads  all including sub-attributes such as Properties-of-Properties,
-Properties-of-Relationships and other standard metadata terms like `observedAt` and `unitCode`. Furthermore normalized payloads are exceedingly regular and parseable, and can easily be reduced down to the relevant `value` elements if such an operation necessary. However with the normalized format, is necessary to repeatedly supply common defining attributes such as `"type": "Property` throughout the payload to ensure that machines can fully understand the data represented.
+The full "normalized" form is an excellent choice for data exchange, since through the the `@context` and the definition
+of JSON-LD keywords, machines are given all the tools to fully comprehend the payload format. Responses return the
+complete current state of each entity, with payloads all including sub-attributes such as Properties-of-Properties,
+Properties-of-Relationships and other standard metadata terms like `observedAt` and `unitCode`. Furthermore normalized
+payloads are exceedingly regular and parseable, and can easily be reduced down to the relevant `value` elements if such
+an operation necessary. However with the normalized format, is necessary to repeatedly supply common defining attributes
+such as `"type": "Property` throughout the payload to ensure that machines can fully understand the data represented.
 
 #### Normalized NGSI-LD using `options=normalized`
 
 ```json
 {
-  "@context": [
-    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
-  ],
-  "id": "urn:nsgi-ld:Beatle:John_Lennon",
-  "type": "Beatle",
-  "age": {"type": "Property", "value":  40, "unitCode" : "ANN"},
-  "name": {"type": "Property", "value": "John Lennon"},
-  "born": {"type": "Property", "value": "1940-10-09"},
-  "spouse": {
-    "type": "Relationship",
-    "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
-  },
-  "location": {
-    "type": "GeoProperty",
-    "value": {
-      "type": "Point",
-      "coordinates": [-73.975, 40.775556]
+    "@context": [
+        "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+    ],
+    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "type": "Beatle",
+    "age": { "type": "Property", "value": 40, "unitCode": "ANN" },
+    "name": { "type": "Property", "value": "John Lennon" },
+    "born": { "type": "Property", "value": "1940-10-09" },
+    "spouse": {
+        "type": "Relationship",
+        "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+    },
+    "location": {
+        "type": "GeoProperty",
+        "value": {
+            "type": "Point",
+            "coordinates": [-73.975, 40.775556]
+        }
     }
-  }
 }
 ```
 
-
 Open in [**JSON-LD Playground**](https://tinyurl.com/4nw9z83m)
-
 
 ### Simplified NGSI-LD
 
-The use of the normalized format can be contrast with the "key-values" pairs format, which is a simplified version concentrating purely on the values of the first level of attributes only. The payloads are remain regular, but are much shorter and to the point, and not all information is returned by the request - `unitCode` and `observedAt` will not be returned in the payload.
+The use of the normalized format can be contrast with the "key-values" pairs format, which is a simplified version
+concentrating purely on the values of the first level of attributes only. The payloads remain regular, but are much
+shorter and to the point, and not all information is returned by the request - second level attributes such as
+`unitCode` and `observedAt` will not be returned in the payload for example.
 
 #### Simplified NGSI-LD using `options=keyValues`
 
 ```json
 {
-  "@context": [
-    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
-  ],
-  "id": "urn:nsgi-ld:Beatle:John_Lennon",
-  "name": "John Lennon",
-  "born": "1940-10-09",
-  "spouse": "urn:nsgi-ld:Person:Cynthia_Lennon",
-  "age": 40,
-  "location": {
-    "type": "Point",
-    "coordinates": [-73.975, 40.775556]
-  }
+    "@context": [
+        "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+    ],
+    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "name": "John Lennon",
+    "born": "1940-10-09",
+    "spouse": "urn:nsgi-ld:Person:Cynthia_Lennon",
+    "age": 40,
+    "location": {
+        "type": "Point",
+        "coordinates": [-73.975, 40.775556]
+    }
 }
 ```
 
-
 Open in [**JSON-LD Playground**](https://tinyurl.com/2p93h8p6)
 
-This key-values payload matches the simple JSON-LD payload which can be seen on the front-page of the official [JSON-LD website](https://json-ld.org/)
+This key-values payload matches the simple JSON-LD payload which can be seen on the front-page of the official
+[JSON-LD website](https://json-ld.org/)
 
-Both normalized and key-values NGSI-LD formats are valid JSON-LD, but since the key-values format is lossy, until recently, all updates to an NGSI-LD context broker must be made using the normalized format.
+Both normalized and key-values NGSI-LD formats are valid JSON-LD, but since the key-values format is lossy, until
+recently, all updates to an NGSI-LD context broker must be made using the normalized format.
 
 ### Concise NGSI-LD
 
-To make the API easier to use and reduce the burden on developers, NGSI-LD now accepts an intermediate "concise" format which still offers all of the context data in the payload, but
-removes the redundancy of repeatedly adding `"type": "Property` throughout each payload. The concise representation is a terser, lossless form of the normalized representation, where redundant "type" members are omitted and the following rules are applied:
+To make the API easier to use and reduce the burden on developers, NGSI-LD now accepts an intermediate "concise" format
+which still offers all of the context data in the payload, but removes the redundancy of repeatedly adding
+`"type": "Property` throughout each payload. The concise representation is a terser, lossless form of the normalized
+representation, where redundant "type" members are omitted and the following rules are applied:
 
--  Every **Property**  without further sub-attributes is represented by the Property value only.
--  Every **Property**  that includes  further sub-attributes is represented by a value key-value pair.
--  Every **GeoProperty**  without further sub-attributes is represented by the GeoProperty’s  GeoJSON representation only
--  Every **GeoProperty**  that includes  further sub-attributes is represented by a value key-value pair.
--  Every **LanguageProperty** is defined by a `languageMap` key-value pair.
--  Every **Relationship** is defined by an `object` key-value pair.
-
+-   Every **Property** without further sub-attributes is represented by the Property value only.
+-   Every **Property** that includes further sub-attributes is represented by a value key-value pair.
+-   Every **GeoProperty** without further sub-attributes is represented by the GeoProperty’s GeoJSON representation only
+-   Every **GeoProperty** that includes further sub-attributes is represented by a value key-value pair.
+-   Every **LanguageProperty** is defined by a `languageMap` key-value pair.
+-   Every **Relationship** is defined by an `object` key-value pair.
 
 #### Concise NGSI-LD using `options=concise`
 
 ```json
 {
-  "@context": [
-    "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
-  ],
-  "id": "urn:nsgi-ld:Beatle:John_Lennon",
-  "name": "John Lennon",
-  "born": "1940-10-09",
-  "spouse": {
-    "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
-  },
-  "age": {"value":  40, "unitCode" : "ANN"},
-  "location": {
-    "type": "Point",
-    "coordinates": [-73.975, 40.775556]
-  }
+    "@context": [
+        "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+    ],
+    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "name": "John Lennon",
+    "born": "1940-10-09",
+    "spouse": {
+        "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+    },
+    "age": { "value": 40, "unitCode": "ANN" },
+    "location": {
+        "type": "Point",
+        "coordinates": [-73.975, 40.775556]
+    }
 }
 ```
 
 Open in [**JSON-LD Playground**](https://tinyurl.com/32shtpp6)
 
-It can be seen from the payload above that the concise format (like normalized) is also lossless as it still includes Properties-of-Properties like `unitCode` (the units of the `age` attribute is obviously years following the UN/CEFACT code `ANN` for example) and also clearly distinguishes between **Properties** and **Relationships** (since **Relationships** always have an `object`)
+It can be seen from the payload above that the concise format (like normalized) is also lossless as it still includes
+Properties-of-Properties like `unitCode` (the units of the `age` attribute is obviously years following the UN/CEFACT
+code `ANN` for example) and also clearly distinguishes between **Properties** and **Relationships** (since
+**Relationships** always have an `object`)
 
-
-In summary, all NGSI-LD formats provide a regular, well-defined payloads, but the "normalized" format
-is verbose and lossless, "key-values" is short and lossy, and third format - "concise" is a secondary,
-intermediate lossless format designed to bridge the gap between the two.
-
-
-
+In summary, all NGSI-LD formats provide a structured, well-defined payloads, but the "normalized" format is verbose and
+lossless, "key-values" is short and lossy, and third format - "concise" is a secondary, intermediate lossless format
+designed to bridge the gap between the two.
 
 #### Device Monitor
 
@@ -157,8 +197,6 @@ to the context broker. Details of the architecture and protocol used can be foun
 seen on the UltraLight device monitor web page found at: `http://localhost:3000/device/monitor`
 
 ![FIWARE Monitor](https://fiware.github.io/tutorials.Concise-Format/img/farm-devices.png)
-
-
 
 ![](https://fiware.github.io/tutorials.Concise-Format/img/history-graphs.png)
 
@@ -187,7 +225,6 @@ Therefore the overall architecture will consist of the following elements:
     -   Used by the **Orion Context Broker** to hold context data information such as data entities, subscriptions and
         registrations
     -   Used by the **IoT Agent** to hold device information such as device URLs and Keys
-
 
 -   An HTTP **Web-Server** which offers static `@context` files defining the context entities within the system.
 -   The **Tutorial Application** does the following:
@@ -230,7 +267,7 @@ docker-compose -v
 docker version
 ```
 
-Please ensure that you are using Docker version 20.10 or higher and Docker Compose 1.29  or higher and upgrade if
+Please ensure that you are using Docker version 20.10 or higher and Docker Compose 1.29 or higher and upgrade if
 necessary.
 
 ## Cygwin for Windows
@@ -265,7 +302,6 @@ repository:
 > ./services stop
 > ```
 
-
 ---
 
 # Concise NGSI-LD Operations
@@ -280,7 +316,9 @@ Create Operations map to HTTP POST.
 -   The `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint is used for adding new attributes
 
 Any newly created entity must have `id` and `type` attributes and a valid `@context` definition. All other attributes
-are optional and will depend on the system being modelled. If additional attributes are present though, a concise **Property** must be encapsulated within a `value`. If a **Relationship** is added it ust be encapsulated within an `object`
+are optional and will depend on the system being modelled. If additional attributes are present though, a concise
+**Property** must be encapsulated within a `value`. If a **Relationship** is added it ust be encapsulated within an
+`object`
 
 The response will be **201 - Created** if the operation is successful or **409 - Conflict** if the operation fails.
 
@@ -305,13 +343,15 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
 }'
 ```
 
-New entities can be added by making a POST request to the `/ngsi-ld/v1/entities` endpoint.
+New entities can be added by making a POST request to the `/ngsi-ld/v1/entities` endpoint. Notice that because
+`category` has no sub-attributes, it does not require a `value` element.
 
-The request will fail if the entity already exists in the context.
+As usual, the request will fail if the entity already exists in the context.
 
 #### :two: Request:
 
-You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request
+You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request. This returns
+the full normalized form:
 
 ```console
 curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -344,11 +384,10 @@ New attributes can be added by making a POST request to the `/ngsi-ld/v1/entitie
 
 The payload should consist of a JSON object holding the attribute names and values as shown.
 
-All **Property** attributes with additional sub-attributes must have a `value` associated with them.
-All **Relationship** attributes must have an
-`object` associated with them which holds the URN of another entity. Well-defined common metadata elements such as
-`unitCode` can be provided as strings, all other metadata should be passed as a JSON object with its own `type` and
-`value` attributes
+All **Property** attributes with additional sub-attributes must have a `value` associated with them. All
+**Relationship** attributes must have an `object` associated with them which holds the URN of another entity.
+Well-defined common metadata elements such as `unitCode` can be provided as strings, all other metadata should be passed
+as a JSON object with its own `type` and `value` attributes
 
 Subsequent requests using the same `id` will update the value of the attribute in the context.
 
@@ -412,12 +451,14 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
 ]'
 ```
 
-It can be seen that `"type": "Property"` can be optionally added to concise payloads and the format is
-still recognized. This means that any normalized payload automatically a valid concise payload. Care
-should be taken when adding arrays using NGSI-LD due to the existing constraints of JSON-LD. Effectively there
-is no difference between an array of one entry  `"category": ["sensor"]` and a simple string value  `"category": "sensor"`. Furthermore, order within the array is not maintained
+It can be seen that `"type": "Property"` can be optionally added to concise payloads and the format is still recognized.
+This means that any normalized payload automatically a valid concise payload. Care should be taken when adding arrays
+using NGSI-LD due to the existing constraints of JSON-LD. Effectively there is no difference between an array of one
+entry `"category": ["sensor"]` and a simple string value `"category": "sensor"`. Furthermore, order within the array is
+not maintained
 
-> **Note:** In NGSI-LD, an ordered array value can be encoded as a JSON Literal `"category" : {"@type": "@json", "@value":[1,2,3]}`.
+> **Note:** In NGSI-LD, an ordered array value could be encoded as a JSON Literal
+> `"category" : {"@type": "@json", "@value":[1,2,3]}`.
 
 The request will fail if any of the attributes already exist in the context. The response highlights which actions have
 been successful and the reason for failure (if any has occurred).
@@ -489,9 +530,9 @@ For read operations the `@context` must be supplied in a `Link` header.
 -   The `options` parameter (combined with the `attrs` parameter) can be used to filter the returned fields
 -   The `q` parameter can be used to filter the returned entities
 
-### Read a Data Entity (verbose)
+### Read a Data Entity (concise)
 
-This example reads the full context from an existing **TemperatureSensor** entity with a known `id`.
+This example reads the state of an existing **TemperatureSensor** entity with a known `id` and returns in concise formt
 
 #### :seven: Request:
 
@@ -503,9 +544,9 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 #### Response:
 
-TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` is returned as _normalized_ NGSI-LD. Additional metadata is
-returned because `options=sysAttrs`. By default the `@context` is returned in the payload body (although this could be
-moved due to content negotiation if the `Accept:application/json` had been set. The full response is shown below:
+TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` is returned as _concise_ NGSI-LD. Additional metadata is returned
+because `options=sysAttrs`. By default the `@context` is returned in the payload body (although this could be moved due
+to content negotiation if the `Accept:application/json` had been set. The full response is shown below:
 
 ```jsonld
 {
@@ -571,13 +612,14 @@ The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response
 }
 ```
 
-Because `options=concise` was used this is  response includes the metadata such as `unitCode`.
-Context data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting
-the `attrs` using a comma separated list.
+Because `options=concise` was used this is response includes the metadata such as `unitCode` but not
+`"type": "Property"` Context data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>`
+endpoint and selecting the `attrs` using a comma separated list.
 
 ### Read a Data Entity (concise)
 
-This example reads the concise NGSI-LD fromar from the context of an existing **TemperatureSensor** entities with a known `id`.
+This example reads the concise NGSI-LD format from the context of an existing **TemperatureSensor** entities with a
+known `id`.
 
 #### :nine: Request:
 
@@ -777,7 +819,7 @@ The full context contains four sensors, they are returned in a random order:
 ]
 ```
 
-Full context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/`
+Context data for a specified entity type can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/`
 endpoint and supplying the `type` parameter, combine this with the `options=keyValues` parameter and the `attrs`
 parameter to retrieve key-values.
 
@@ -791,10 +833,10 @@ unique, so `type` is not required for this request. To filter by `id` add the en
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
 -H 'Link: <http://context/json-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
--H 'Accept: application/json' \
+-H 'Accept: 'application/json' \
 -d 'id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002' \
--d 'options=keyValues' \
--d 'attrs=temperature'
+-d 'attrs=temperature' \
+-d 'options=concise'
 ```
 
 #### Response:
@@ -822,12 +864,10 @@ The response details the selected attributes from the selected entities.
 ]
 ```
 
-
-
 ### Returning data as GeoJSON
 
-The concise format is also available for the GeoJSON format which can be requested by setting the `Accept` header
-to `application/geo+json` and setting the `options=concise` parameter
+The concise format is also available for the GeoJSON format which can be requested by setting the `Accept` header to
+`application/geo+json` and setting the `options=concise` parameter
 
 #### :one::four: Request:
 
@@ -842,7 +882,8 @@ curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
 
 #### Response:
 
-The response details the selected attributes from the selected entities is returned as a GeoJSON feature collection. The `properties` section holds data in concise format.
+The response details the selected attributes from the selected entities is returned as a GeoJSON feature collection. The
+`properties` section holds data in concise format.
 
 ```json
 {
@@ -870,10 +911,7 @@ The response details the selected attributes from the selected entities is retur
                 "location": {
                     "value": {
                         "type": "Point",
-                        "coordinates": [
-                            13.346,
-                            52.52
-                        ]
+                        "coordinates": [13.346, 52.52]
                     },
                     "providedBy": {
                         "object": "urn:ngsi-ld:Device:pig010"
@@ -884,10 +922,7 @@ The response details the selected attributes from the selected entities is retur
             "@context": "http://context/json-context.jsonld",
             "geometry": {
                 "type": "Point",
-                "coordinates": [
-                    13.346,
-                    52.52
-                ]
+                "coordinates": [13.346, 52.52]
             }
         },
         {
@@ -912,10 +947,7 @@ The response details the selected attributes from the selected entities is retur
                 "location": {
                     "value": {
                         "type": "Point",
-                        "coordinates": [
-                            13.347,
-                            52.522
-                        ]
+                        "coordinates": [13.347, 52.522]
                     },
                     "providedBy": {
                         "object": "urn:ngsi-ld:Device:pig006"
@@ -926,17 +958,12 @@ The response details the selected attributes from the selected entities is retur
             "@context": "http://context/json-context.jsonld",
             "geometry": {
                 "type": "Point",
-                "coordinates": [
-                    13.347,
-                    52.522
-                ]
+                "coordinates": [13.347, 52.522]
             }
         }
     ]
 }
 ```
-
-
 
 ## Update Operations
 
@@ -949,28 +976,27 @@ Overwrite operations are mapped to HTTP PATCH:
 
 This example updates the value of the `category` attribute of the Entity with `id=urn:ngsi-ld:TemperatureSensor:001`
 
-#### :one::four: Request:
+#### :one::five: Request:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
 -H 'Content-Type: application/json' \
 -H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
-    "value": ["sensor", "actuator"],
-    "type": "Property"
+    "value": ["sensor", "actuator"]
 }'
 ```
 
 Existing attribute values can be altered by making a PATCH request to the
 `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint. The appropriate `@context` should be supplied as a `Link`
-header.
+header. The only difference between a normalized and concise payload is the missing `type` attribute.
 
 ### Overwrite Multiple Attributes of a Data Entity
 
 This example simultaneously updates the values of both the `category` and `controlledAsset` attributes of the Entity
 with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
-#### :one::five: Request:
+#### :one::six: Request:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
@@ -981,11 +1007,9 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
             "value": [
                   "sensor",
                   "actuator"
-            ],
-            "type": "Property"
+            ]
       },
       "controlledAsset": {
-            "type": "Relationship",
             "object": "urn:ngsi-ld:Building:barn001"
       }
 }'
@@ -995,7 +1019,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 
 This example uses the convenience batch processing endpoint to update existing sensors.
 
-#### :one::six: Request:
+#### :one::seven: Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
@@ -1005,24 +1029,18 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
     "type": "TemperatureSensor",
-    "category": {
-      "type": "Property",
-      "value": [
+    "category": [
         "actuator",
         "sensor"
-      ]
-    }
+    ]
   },
   {
     "id": "urn:ngsi-ld:TemperatureSensor:004",
     "type": "TemperatureSensor",
-    "category": {
-      "type": "Property",
-      "value": [
+    "category":  [
         "actuator",
         "sensor"
-      ]
-    }
+    ]
   }
 ]'
 ```
@@ -1038,7 +1056,7 @@ operation will not silently create any new entities - it fails if the entities d
 
 This example uses the convenience batch processing endpoint to replace entity data of existing sensors.
 
-#### :one::seven: Request:
+#### :one::eight: Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
@@ -1048,23 +1066,18 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
     "type": "TemperatureSensor",
-    "category": {
-      "type": "Property",
-      "value": [
+    "category":[
         "actuator",
         "sensor"
       ]
-    }
   },
   {
     "id": "urn:ngsi-ld:TemperatureSensor:004",
     "type": "TemperatureSensor",
     "temperature": {
-      "type": "Property",
-      "value": [
-        "actuator",
-        "sensor"
-      ]
+      "value": 16,
+      "unitCode": "CEL"
+      "observedAt": "2022-03-01T15:00:00.000Z"
     }
   }
 ]'
@@ -1073,129 +1086,6 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=
 Batch processing uses the `/ngsi-ld/v1/entityOperations/update` endpoint with a payload with the - `options=replace`
 parameter, this means we will overwrite existing entities. `/ngsi-ld/v1/entityOperations/upsert` could also be used if
 new entities are also to be created.
-
-## Delete Operations
-
-Delete Operations map to HTTP DELETE.
-
--   The `/ngsi-ld/v1/entities/<entity-id>` endpoint can be used to delete an entity
--   The `/ngsi-ld/v1/entities/<entity-id>/attrs/<attribute>` endpoint can be used to delete an attribute
-
-The response will be **204 - No Content** if the operation is successful or **404 - Not Found** if the operation fails.
-
-### Data Relationships
-
-If there are entities within the context which relate to one another, you must be careful when deleting an entity. You
-will need to check that no references are left dangling once the entity has been deleted.
-
-Organizing a cascade of deletions is beyond the scope of this tutorial, but it would be possible using a batch delete
-request.
-
-### Delete an Entity
-
-This example deletes the entity with `id=urn:ngsi-ld:TemperatureSensor:004` from the context.
-
-#### :one::eight: Request:
-
-```console
-curl -iX DELETE 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:004'
-```
-
-Entities can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>` endpoint.
-
-Subsequent requests using the same `id` will result in an error response since the entity no longer exists in the
-context.
-
-### Delete an Attribute from an Entity
-
-This example removes the `batteryLevel` attribute from the entity with `id=urn:ngsi-ld:TemperatureSensor:001`.
-
-#### :one::nine: Request:
-
-```console
-curl -L -X DELETE 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/batteryLevel' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
-```
-
-Attributes can be deleted by making a DELETE request to the `/ngsi-ld/v1/entities/<entity>/attrs/<attribute>` endpoint.
-It is important to supply the appropriate `@context` in the request in the form of a `Link` header to ensure that the
-attribute name can be recognised.
-
-If the entity does not exist within the context or the attribute cannot be found on the entity, the result will be an
-error response.
-
-### Batch Delete Multiple Entities
-
-This example uses the convenience batch processing endpoint to delete some **TemperatureSensor** entities.
-
-#### :two::zero: Request:
-
-```console
-curl -L -X POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/delete' \
--H 'Content-Type: application/json' \
---data-raw '[
-  "urn:ngsi-ld:TemperatureSensor:002",
-  "urn:ngsi-ld:TemperatureSensor:003"
-]'
-```
-
-Batch processing uses the `/ngsi-ld/v1/entityOperations/delete` endpoint with a payload consisting of an array of
-elements to delete.
-
-If an entity does not exist in the context, the result will be an error response.
-
-### Batch Delete Multiple Attributes from an Entity
-
-This example uses the PATCH `/ngsi-ld/v1/entities/<entity-id>/attrs` endpoint to delete some attributes from a
-**TemperatureSensor** entity.
-
-#### :two::one: Request:
-
-```console
-curl -L -X PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
--H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
---data-raw '{
-      "category": {
-            "value": null,
-            "type": "Property"
-      },
-      "controlledAsset": {
-            "type": "Relationship",
-            "object": null
-      }
-}'
-```
-
-If a value is set to `null` the attribute is deleted.
-
-### Find existing data relationships
-
-This example returns a header indicating whether any linked data relationships remain against the entity
-`urn:ngsi-ld:Building:barn002`
-
-#### :two::two: Request:
-
-```console
-curl -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/?type=TemperatureSensor&limit=0&count=true&q=controlledAsset==%22urn:ngsi-ld:Building:barn002%22' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
--H 'Accept: application/json'
-```
-
-#### Response:
-
-```json
-[]
-```
-
-Because the `limit=0` parameter has been used **no entities** are listed in the payload body, however the `count=true`
-means that the count is passed as a header instead:
-
-```text
-NGSILD-Results-Count: 1
-```
-
-If `limit` was not present the payload would hold the details of every matching entity instead.
 
 # Next Steps
 
