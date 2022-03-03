@@ -73,7 +73,7 @@ terms which can be found in the core @context served with every request.
 
 ### Normalized NGSI-LD
 
-The full "normalized" form is an excellent choice for data exchange, since through the the `@context` and the definition
+The full "normalized" form is an excellent choice for data exchange, since through the `@context` and the definition
 of JSON-LD keywords, machines are given all the tools to fully comprehend the payload format. Responses return the
 complete current state of each entity, with payloads all including sub-attributes such as Properties-of-Properties,
 Properties-of-Relationships and other standard metadata terms like `observedAt` and `unitCode`. Furthermore normalized
@@ -140,7 +140,7 @@ shorter and to the point, and not all information is returned by the request - s
 Open in [**JSON-LD Playground**](https://tinyurl.com/2p93h8p6)
 
 This key-values payload matches the simple JSON-LD payload which can be seen on the front-page of the official
-[JSON-LD website](https://json-ld.org/)
+[JSON-LD site](https://json-ld.org/)
 
 Both normalized and key-values NGSI-LD formats are valid JSON-LD, but since the key-values format is lossy, until
 recently, all updates to an NGSI-LD context broker must be made using the normalized format.
