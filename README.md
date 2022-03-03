@@ -50,6 +50,9 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
         -   [Overwrite Multiple Attributes of a Data Entity](#overwrite-multiple-attributes-of-a-data-entity)
         -   [Batch Update Attributes of Multiple Data Entities](#batch-update-attributes-of-multiple-data-entities)
         -   [Batch Replace Entity Data](#batch-replace-entity-data)
+    -   [Setting up concise Subscriptions](#setting-up-concise-subscriptions)
+        -   [Concise Notification](#concise-notification)
+        -   [Concise GeoJSON Notification](#concise-geojson-notification)
 
 </details>
 
@@ -1086,6 +1089,167 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=
 Batch processing uses the `/ngsi-ld/v1/entityOperations/update` endpoint with a payload with the - `options=replace`
 parameter, this means we will overwrite existing entities. `/ngsi-ld/v1/entityOperations/upsert` could also be used if
 new entities are also to be created.
+
+## Setting up concise Subscriptions
+
+### Concise Notification
+
+The concise format can also be used when generating a notification from a subscription. Simply set the
+`format": "concise"` within the `notification` element as shown
+
+#### :one::nine: Request:
+
+```console
+curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
+-H 'Content-Type: application/ld+json' \
+-H 'NGSILD-Tenant: openiot' \
+--data-raw '{
+  "description": "Notify me of low feedstock on Farm:001",
+  "type": "Subscription",
+  "entities": [{"id": "urn:ngsi-ld:Animal:pig003", "type": "Animal"}],
+  "notification": {
+    "format": "concise",
+    "endpoint": {
+      "uri": "http://tutorial:3000/subscription/low-stock-farm001-ngsild",
+      "accept": "application/geo+json"
+    }
+  },
+   "@context": "http://context/ngsi-context.jsonld"
+}'
+```
+
+Then go to the Device Monitor `http://localhost:3000/app/farm/urn:ngsi-ld:Building:farm001` and remove some hay from the
+barn. Eventually a request is sent to `subscription/low-stock-farm001` as shown:
+
+#### `http://localhost:3000/app/monitor`
+
+#### Subscription Payload:
+
+```json
+{
+    "id": "urn:ngsi-ld:Notification:6220b4e464f3729a8527f8a0",
+    "type": "Notification",
+    "subscriptionId": "urn:ngsi-ld:Subscription:6220b4a964f3729a8527f88c",
+    "@context": "http://context/ngsi-context.jsonld",
+    "notifiedAt": "2022-03-03T12:30:28.237Z",
+    "data": [
+        {
+            "id": "urn:ngsi-ld:Animal:pig003",
+            "type": "Animal",
+            "heartRate": {
+                "value": 67,
+                "unitCode": "5K",
+                "observedAt": "2022-03-03T12:30:27.000Z",
+                "providedBy": {
+                    "object": "urn:ngsi-ld:Device:pig003"
+                }
+            },
+            "phenologicalCondition": "maleAdult",
+            "reproductiveCondition": "active",
+            "name": "Flamingo",
+            "legalID": "M-boar003-Flamingo",
+            "sex": "male",
+            "species": "pig",
+            "location": {
+                "value": {
+                    "type": "Point",
+                    "coordinates": [13.357, 52.513]
+                },
+                "observedAt": "2022-03-03T12:30:27.000Z",
+                "providedBy": {
+                    "object": "urn:ngsi-ld:Device:pig003"
+                }
+            }
+        }
+    ]
+}
+```
+
+### Concise GeoJSON Notification
+
+#### :two::zero: Request:
+
+It is also possible to send GeoJSON notifications if the `"accept": "application/geo+json"` attribute is set. Combining
+this with `"format": "concise"` results in a `FeatureCollection` with properties in concise format.
+
+```console
+curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
+-H 'Content-Type: application/ld+json' \
+-H 'NGSILD-Tenant: openiot' \
+--data-raw '{
+  "description": "Notify me of low feedstock on Farm:001",
+  "type": "Subscription",
+  "entities": [{"id": "urn:ngsi-ld:Animal:pig003", "type": "Animal"}],
+  "notification": {
+    "format": "concise",
+    "endpoint": {
+      "uri": "http://tutorial:3000/subscription/low-stock-farm001-ngsild",
+      "accept": "application/geo+json"
+    }
+  },
+   "@context": "http://context/ngsi-context.jsonld"
+}'
+```
+
+#### Subscription Payload:
+
+The result of a concise GeoJSON notification can be seen below.
+
+```json
+{
+    "id": "urn:ngsi-ld:Notification:6220b50264f3729a8527f8ab",
+    "type": "Notification",
+    "subscriptionId": "urn:ngsi-ld:Subscription:6220b47764f3729a8527f886",
+    "notifiedAt": "2022-03-03T12:30:58.294Z",
+    "data": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "id": "urn:ngsi-ld:Animal:pig003",
+                "type": "Feature",
+                "properties": {
+                    "type": "Animal",
+                    "heartRate": {
+                        "value": 63,
+                        "unitCode": "5K",
+                        "observedAt": "2022-03-03T12:30:58.000Z",
+                        "providedBy": {
+                            "object": "urn:ngsi-ld:Device:pig003"
+                        }
+                    },
+                    "phenologicalCondition": "maleAdult",
+                    "reproductiveCondition": "active",
+                    "name": "Flamingo",
+                    "legalID": "M-boar003-Flamingo",
+                    "sex": "male",
+                    "species": "pig",
+                    "location": {
+                        "value": {
+                            "type": "Point",
+                            "coordinates": [13.357, 52.513]
+                        },
+                        "observedAt": "2022-03-03T12:30:58.000Z",
+                        "providedBy": {
+                            "object": "urn:ngsi-ld:Device:pig003"
+                        }
+                    }
+                },
+                "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+                "geometry": {
+                    "value": {
+                        "type": "Point",
+                        "coordinates": [13.357, 52.513]
+                    },
+                    "observedAt": "2022-03-03T12:30:58.000Z",
+                    "providedBy": {
+                        "object": "urn:ngsi-ld:Device:pig003"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
 
 # Next Steps
 
