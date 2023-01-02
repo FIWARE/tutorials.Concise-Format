@@ -15,7 +15,7 @@ The tutorial uses [cUrl](https://ec.haxx.se/) commands throughout, but is also a
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d24facc3c430bb5d5aaf)
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/FIWARE/tutorials.Concise-Format/tree/NGSI-LD)
 
- このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
+このチュートリアルは[日本語](README.ja.md)でもご覧いただけます。
 
 ## Contents
 
@@ -76,9 +76,9 @@ terms which can be found in the core @context served with every request.
 
 ### Normalized NGSI-LD
 
-The full "normalized" form is an excellent choice for data exchange, since through the `@context` and the definition
-of JSON-LD keywords, machines are given all the tools to fully comprehend the payload format. Responses return the
-complete current state of each entity, with payloads all including sub-attributes such as Properties-of-Properties,
+The full "normalized" form is an excellent choice for data exchange, since through the `@context` and the definition of
+JSON-LD keywords, machines are given all the tools to fully comprehend the payload format. Responses return the complete
+current state of each entity, with payloads all including sub-attributes such as Properties-of-Properties,
 Properties-of-Relationships and other standard metadata terms like `observedAt` and `unitCode`. Furthermore normalized
 payloads are exceedingly regular and parseable, and can easily be reduced down to the relevant `value` elements if such
 an operation necessary. However with the normalized format, is necessary to repeatedly supply common defining attributes
