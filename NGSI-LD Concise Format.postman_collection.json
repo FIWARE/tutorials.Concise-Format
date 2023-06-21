@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "46504857-1b9b-477d-a5bb-d3e317e25bb2",
+		"_postman_id": "e17fbbac-6c6d-4264-82f8-565a07b2ff9a",
 		"name": "NGSI-LD Concise Format",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "513743"
+		"_exporter_id": "513743",
+		"_collection_link": "https://fiware.postman.co/workspace/NGSI-LD-tutorials~60157bf9-a93f-4c6e-90d1-0917133c1872/collection/513743-e17fbbac-6c6d-4264-82f8-565a07b2ff9a?action=share&creator=513743&source=collection_link"
 	},
 	"item": [
 		{
@@ -503,7 +504,7 @@
 						"header": [
 							{
 								"key": "Link",
-								"value": "<{{json-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							},
 							{
@@ -514,7 +515,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&options=concise&attrs=temperature",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&options=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -536,7 +537,8 @@
 								},
 								{
 									"key": "attrs",
-									"value": "temperature"
+									"value": "temperature",
+									"disabled": true
 								}
 							]
 						},
@@ -674,7 +676,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"category\": [\n                  \"sensor\",\n                  \"actuator\"\n            ]\n     ,\n      \"controlledAsset\": {\n            \"object\": \"urn:ngsi-ld:Building:barn001\"\n      }\n}"
+							"raw": "{\n    \"category\": [\n        \"sensor\",\n        \"actuator\"\n    ],\n    \"controlledAsset\": {\n        \"object\": \"urn:ngsi-ld:Building:barn001\"\n    }\n}"
 						},
 						"url": {
 							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs",
@@ -818,48 +820,16 @@
 								"key": "NGSILD-Tenant",
 								"value": "openiot",
 								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"description\": \"Notify me of low feedstock on Farm:001\",\n  \"type\": \"Subscription\",\n  \"entities\": [{\"id\": \"urn:ngsi-ld:Animal:pig003\", \"type\": \"Animal\"}],\n  \"notification\": {\n    \"format\": \"concise\",\n    \"endpoint\": {\n      \"uri\": \"http://tutorial:3000/subscription/low-stock-farm001-ngsild\",\n      \"accept\": \"application/geo+json\"\n    }\n  },\n   \"@context\": \"http://context/ngsi-context.jsonld\"\n}"
-						},
-						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/subscriptions/",
-							"protocol": "http",
-							"host": [
-								"{{orion}}"
-							],
-							"path": [
-								"ngsi-ld",
-								"v1",
-								"subscriptions",
-								""
-							]
-						},
-						"description": "This second subscription will fire when the `filling` level is between 0.6 and 0.4. The `format` attribute has been altered to inform the subscriber using NGSI-LD normalized format.\n\n#### Subscription Payload:\n\nWhen a `low-stock-farm001-ngsild` event is fired, the response is as shown:\n\n```json\n{\n \"id\": \"urn:ngsi-ld:Notification:5fd0fa684eb81930c97005f3\",\n \"type\": \"Notification\",\n \"subscriptionId\": \"urn:ngsi-ld:Subscription:5fd0f69b4eb81930c97005db\",\n \"notifiedAt\": \"2020-12-09T16:25:12.193Z\",\n \"data\": [\n  {\n   \"id\": \"urn:ngsi-ld:Device:filling001\",\n   \"type\": \"FillingSensor\",\n   \"filling\": {\n    \"type\": \"Property\",\n    \"value\": 0.25,\n    \"unitCode\": \"C62\",\n    \"observedAt\": \"2020-12-09T16:25:12.000Z\"\n   },\n   \"controllingAsset\": {\n    \"type\": \"Relationship\",\n    \"object\": \"urn:ngsi-ld:Building:farm001\",\n    \"observedAt\": \"2020-12-09T16:25:12.000Z\"\n   }\n  }\n ]\n}\n```\n\nBecause the `accept` attribute has been set to `application/json`, the `@context` is sent as a `Link` header rather than an attribute within the payload body."
-					},
-					"response": []
-				},
-				{
-					"name": "NGSI-LD concise Payload - GeoJSON",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/ld+json",
-								"type": "text"
 							},
 							{
-								"key": "NGSILD-Tenant",
-								"value": "openiot",
+								"key": "Link",
+								"value": "<{{ngsi-context.jsonld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"description\": \"Notify me of low feedstock on Farm:001\",\n  \"type\": \"Subscription\",\n  \"entities\": [{\"id\": \"urn:ngsi-ld:Animal:pig003\", \"type\": \"Animal\"}],\n  \"notification\": {\n    \"format\": \"concise\",\n    \"endpoint\": {\n      \"uri\": \"http://tutorial:3000/subscription/low-stock-farm001-ngsild\",\n      \"accept\": \"application/geo+json\"\n    }\n  },\n   \"@context\": \"http://context/ngsi-context.jsonld\"\n}"
+							"raw": "{\n  \"description\": \"Notify me of movement of an Animal\",\n  \"type\": \"Subscription\",\n  \"entities\": [{\"id\": \"urn:ngsi-ld:Animal:pig003\", \"type\": \"Animal\"}],\n  \"notification\": {\n    \"format\": \"concise\",\n    \"endpoint\": {\n      \"uri\": \"http://tutorial:3000/subscription/low-stock-farm001-ngsild\",\n      \"accept\": \"application/geo+json\"\n    }\n  },\n   \"@context\": \"http://context/ngsi-context.jsonld\"\n}"
 						},
 						"url": {
 							"raw": "http://{{orion}}/ngsi-ld/v1/subscriptions/",
@@ -900,6 +870,20 @@
 					}
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "orion",
+			"value": "localhost:1026"
+		},
+		{
+			"key": "ngsi-context.jsonld",
+			"value": "http://context/ngsi-context.jsonld"
+		},
+		{
+			"key": "json-context.jsonld",
+			"value": "http://context/json-context.jsonld"
 		}
 	]
 }
