@@ -319,7 +319,7 @@ git checkout NGSI-LD
 Bash script を実行することにより、コマンドラインからすべてのサービスを初期化できます:
 
 ```console
-./services start
+./services [orion|scorpio|stellio]
 ```
 
 > :information_source: **注:** クリーンアップしてやり直す場合は、次のコマンドを実行してください
