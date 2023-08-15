@@ -93,7 +93,7 @@ NGSI-LD API は、複数の形式でコンテキスト・データを生成す�
 {
     "@context": [
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
     "id": "urn:nsgi-ld:Beatle:John_Lennon",
     "type": "Beatle",
@@ -131,7 +131,7 @@ NGSI-LD API は、複数の形式でコンテキスト・データを生成す�
 {
     "@context": [
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
     "id": "urn:nsgi-ld:Beatle:John_Lennon",
     "name": "John Lennon",
@@ -174,7 +174,7 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
 {
     "@context": [
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.4.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
     "id": "urn:nsgi-ld:Beatle:John_Lennon",
     "name": "John Lennon",
@@ -1304,7 +1304,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
                         }
                     }
                 },
-                "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+                "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
                 "geometry": {
                     "value": {
                         "type": "Point",
