@@ -302,7 +302,8 @@ repository:
 ./services [orion|scorpio|stellio]
 ```
 
-> :information_source: **Note:** If you want to clean up and start over again you can do so with the following command:
+> [!NOTE]
+>  If you want to clean up and start over again you can do so with the following command:
 >
 > ```console
 > ./services stop
@@ -332,7 +333,7 @@ The response will be **201 - Created** if the operation is successful or **409 -
 
 This example adds a new **TemperatureSensor** entity to the context.
 
-#### :one: Request:
+#### 1️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -354,7 +355,7 @@ New entities can be added by making a POST request to the `/ngsi-ld/v1/entities`
 
 As usual, the request will fail if the entity already exists in the context.
 
-#### :two: Request:
+#### 2️⃣ Request:
 
 You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request. This returns
 the full normalized form:
@@ -369,7 +370,7 @@ curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 This example adds a new `batteryLevel` Property and a `controlledAsset` Relationship to the existing
 **TemperatureSensor** entity with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
-#### :three: Request:
+#### 3️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
@@ -397,7 +398,7 @@ as a JSON object with its own `type` and `value` attributes.
 
 Subsequent requests using the same `id` will update the value of the attribute in the context.
 
-#### :four: Request:
+#### 4️⃣ Request:
 
 You can check to see if the new **TemperatureSensor** can be found in the context by making a GET request.
 
@@ -415,7 +416,7 @@ short names.
 This example uses the convenience batch processing endpoint to add three new **TemperatureSensor** entities to the
 context. Batch create uses the `/ngsi-ld/v1/entityOperations/create` endpoint.
 
-#### :five: Request:
+#### 5️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
@@ -463,7 +464,8 @@ using NGSI-LD due to the existing constraints of JSON-LD. Effectively there is n
 entry `"category": ["sensor"]` and a simple string value `"category": "sensor"`. Furthermore, order within the array is
 not maintained.
 
-> **Note:** In NGSI-LD, an ordered array value could be encoded as a JSON Literal
+> [!NOTE]
+> In NGSI-LD, an ordered array value could be encoded as a JSON Literal
 > `"category" : {"@type": "@json", "@value":[1,2,3]}`.
 
 The request will fail if any of the attributes already exist in the context. The response highlights which actions have
@@ -489,7 +491,7 @@ context.
 -   if an entity already exists, the request will update that entity's attributes.
 -   if an entity does not exist, a new entity will be created.
 
-#### :six: Request:
+#### 6️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
@@ -541,7 +543,7 @@ For read operations the `@context` must be supplied in a `Link` header.
 This example reads the state of an existing **TemperatureSensor** entity with a known `id` and returns in concise
 format.
 
-#### :seven: Request:
+#### 7️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -595,7 +597,7 @@ endpoint.
 This example reads the value of a single attribute (`temperature`) from an existing **TemperatureSensor** entity with a
 known `id`.
 
-#### :eight: Request:
+#### 8️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -628,7 +630,7 @@ endpoint and selecting the `attrs` using a comma separated list.
 This example reads the concise NGSI-LD format from the context of an existing **TemperatureSensor** entities with a
 known `id`.
 
-#### :nine: Request:
+#### 9️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -671,7 +673,7 @@ Combine the `options=concise` parameter with the `attrs` parameter to retrieve a
 This example reads the value of two attributes (`category` and `temperature`) from the context of an existing
 **TemperatureSensor** entity with a known `id`.
 
-#### :one::zero: Request:
+#### 1️⃣0️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -703,7 +705,7 @@ Combine the `options=concise` parameter and the `attrs` parameter to return a li
 
 This example lists the full context of all **TemperatureSensor** entities.
 
-#### :one::one: Request:
+#### 1️⃣1️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -774,7 +776,7 @@ context will now contain four sensors.
 
 This example lists the `temperature` attribute of all **TemperatureSensor** entities in concise format.
 
-#### :one::two: Request:
+#### 1️⃣2️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -835,7 +837,7 @@ parameter to retrieve key-values.
 This example lists selected data from two **TemperatureSensor** entities chosen by `id`. Note that every `id` must be
 unique, so `type` is not required for this request. To filter by `id` add the entries in a comma delimited list.
 
-#### :one::three: Request:
+#### 1️⃣3️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
@@ -876,7 +878,7 @@ The response details the selected attributes from the selected entities.
 The concise format is also available for the GeoJSON format which can be requested by setting the `Accept` header to
 `application/geo+json` and setting the `options=concise` parameter.
 
-#### :one::four: Request:
+#### 1️⃣4️⃣ Request:
 
 ```console
 curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
@@ -983,7 +985,7 @@ Overwrite operations are mapped to HTTP PATCH:
 
 This example updates the value of the `category` attribute of the Entity with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
-#### :one::five: Request:
+#### 1️⃣5️⃣ Request:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
@@ -1003,7 +1005,7 @@ header. The only difference between a normalized and concise payload is the miss
 This example simultaneously updates the values of both the `category` and `controlledAsset` attributes of the Entity
 with `id=urn:ngsi-ld:TemperatureSensor:001`.
 
-#### :one::six: Request:
+#### 1️⃣6️⃣ Request:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
@@ -1026,7 +1028,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 
 This example uses the convenience batch processing endpoint to update existing sensors.
 
-#### :one::seven: Request:
+#### 1️⃣7️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
@@ -1063,7 +1065,7 @@ operation will not silently create any new entities - it fails if the entities d
 
 This example uses the convenience batch processing endpoint to replace entity data of existing sensors.
 
-#### :one::eight: Request:
+#### 1️⃣8️⃣ Request:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
@@ -1101,7 +1103,7 @@ new entities are also to be created.
 The concise format can also be used when generating a notification from a subscription. Simply set the
 `"format": "concise"` within the `notification` element as shown:
 
-#### :one::nine: Request:
+#### 1️⃣9️⃣ Request:
 
 ```console
 curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
@@ -1171,7 +1173,7 @@ barn. Eventually a request is sent to `subscription/low-stock-farm001` as shown:
 
 ### Concise GeoJSON Notification
 
-#### :two::zero: Request:
+#### 2️⃣0️⃣ Request:
 
 It is also possible to send GeoJSON notifications if the `"accept": "application/geo+json"` attribute is set. Combining
 this with `"format": "concise"` results in a `FeatureCollection` with properties in concise format.

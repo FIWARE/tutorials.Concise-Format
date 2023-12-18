@@ -357,7 +357,7 @@ Bash script を実行することにより、コマンドラインからすべ�
 
 この例では、新しい **TemperatureSensor** エンティティをコンテキストに追加します。
 
-#### :one: リクエスト:
+#### 1️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -379,7 +379,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
 
 いつものように、エンティティがコンテキストにすでに存在する場合、リクエストは失敗します。
 
-#### :two: リクエスト:
+#### 2️⃣ リクエスト:
 
 GET リクエストを行うことで、コンテキスト内で新しい **TemperatureSensor** が見つかるかどうかを確認できます。これにより、
 完全に正規化された形式が返されます:
@@ -396,7 +396,7 @@ curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 この例では、新しい `batteryLevel` プロパティと `controlledAsset` リレーションシップを `id=urn:ngsi-ld:TemperatureSensor:001`
 の id をもつ既存の **TemperatureSensor** エンティティに追加します。
 
-#### :three: リクエスト:
+#### 3️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
@@ -424,7 +424,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperature
 
 同じ `id` を使用する後続のリクエストは、コンテキスト内の属性の値を更新します。
 
-#### :four: リクエスト:
+#### 4️⃣ リクエスト:
 
 GET リクエストを行うことで、コンテキスト内で新しい **TemperatureSensor** が見つかるかどうかを確認できます。
 
@@ -443,7 +443,7 @@ curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 この例では、便利なバッチ処理エンドポイントを使用して、3つの新しい **TemperatureSensor** エンティティをコンテキストに
 追加します。バッチ作成は `/ngsi-ld/v1/entityOperations/create` エンドポイントを使用します。
 
-#### :five: リクエスト:
+#### 5️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
@@ -518,7 +518,7 @@ NGSI-LD を使用してアレイを追加する場合は注意が必要です。
 -   エンティティがすでに存在する場合、リクエストはそのエンティティの属性を更新します
 -   エンティティが存在しない場合は、新しいエンティティが作成されます
 
-#### :six: リクエスト:
+#### 6️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
@@ -575,7 +575,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
 
 この例では、既知の `id` の既存の **TemperatureSensor** エンティティの状態を読み取り、簡潔な形式で返します。
 
-#### :seven: リクエスト:
+#### 7️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -632,7 +632,7 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` は _concise_ NGSI-LD と�
 この例では、既知の `id` を持つ既存の **TemperatureSensor** エンティティから単一の属性 (`temperature`)
 の値を読み取ります。
 
-#### :eight: リクエスト:
+#### 8️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -667,7 +667,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 この例では、既知の `id` を持つ既存の **TemperatureSensor** エンティティのコンテキストから簡潔な NGSI-LD
 形式を読み取ります。
 
-#### :nine: リクエスト:
+#### 9️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -712,7 +712,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 この例では、既知の `id` を持つ既存の **TemperatureSensor** エンティティのコンテキストから2つの属性 (`category`
 と `temperature`) の値を読み取ります。
 
-#### :one::zero: リクエスト:
+#### 1️⃣0️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
@@ -746,7 +746,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 この例では、すべての **TemperatureSensor** エンティティの完全なコンテキストを一覧表示します。
 
-#### :one::one: リクエスト:
+#### 1️⃣1️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -819,7 +819,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 
 この例では、すべての **TemperatureSensor** エンティティの `temperature` 属性を簡潔な形式で一覧表示します。
 
-#### :one::two: リクエスト:
+#### 1️⃣2️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
@@ -883,7 +883,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 すべての `id` は一意である必要があるため、このリクエストには `type` は必要ありません。`id` でフィルタリングするには、
 カンマ区切りのリストにエントリを追加します。
 
-#### :one::three: リクエスト:
+#### 1️⃣3️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
@@ -926,7 +926,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
 簡潔な形式は、`Accept` ヘッダを `application/geo+json` に設定し、`options=concise` パラメータを設定することで
 リクエストできる GeoJSON 形式でも使用できます。
 
-#### :one::four: リクエスト:
+#### 1️⃣4️⃣ リクエスト:
 
 ```console
 curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
@@ -1037,7 +1037,7 @@ curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
 
 この例では、エンティティの `category` 属性の値を `id=urn:ngsi-ld:TemperatureSensor:001` で更新します。
 
-#### :one::five: リクエスト:
+#### 1️⃣5️⃣ リクエスト:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
@@ -1059,7 +1059,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 この例では、エンティティの `category` 属性と `ControlledAsset` 属性の両方の値を `id=urn:ngsi-ld:TemperatureSensor:001`
 で同時に更新します。
 
-#### :one::six: リクエスト:
+#### 1️⃣6️⃣ リクエスト:
 
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
@@ -1084,7 +1084,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 
 この例では、便利なバッチ処理エンドポイントを使用して、既存のセンサを更新します。
 
-#### :one::seven: リクエスト:
+#### 1️⃣7️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
@@ -1123,7 +1123,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=
 
 この例では、便利なバッチ処理エンドポイントを使用して、既存のセンサのエンティティ・データを置き換えます。
 
-#### :one::eight: リクエスト:
+#### 1️⃣8️⃣ リクエスト:
 
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
@@ -1165,7 +1165,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=
 サブスクリプションから通知を生成するときにも、簡潔な形式を使用できます。 図のように、`notification` 要素内に
 `"format": "concise"`を設定するだけです:
 
-#### :one::nine: リクエスト:
+#### 1️⃣9️⃣ リクエスト:
 
 ```console
 curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
@@ -1237,7 +1237,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
 
 ### 簡潔な GeoJSON 通知
 
-#### :two::zero: リクエスト:
+#### 2️⃣0️⃣ リクエスト:
 
 `"accept": "application/geo+json"` 属性が設定されている場合は、GeoJSON 通知を送信することもできます。
 これを `"format": "concise"` と組み合わせると、プロパティが簡潔な形式の `FeatureCollection` になります。
