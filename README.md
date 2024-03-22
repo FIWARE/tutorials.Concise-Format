@@ -1,4 +1,4 @@
-# Concise NGSI-LD[<img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"  align="left" />](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.07.01_60/gs_cim009v010701p.pdf)[<img src="https://fiware.github.io/tutorials.Concise-Format/img/fiware.png" align="left" width="162">](https://www.fiware.org/)<br/>
+# Concise NGSI-LD[<img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"  align="left" />](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf)[<img src="https://fiware.github.io/tutorials.Concise-Format/img/fiware.png" align="left" width="162">](https://www.fiware.org/)<br/>
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Concise-Format.svg)](https://opensource.org/licenses/MIT)
@@ -471,7 +471,7 @@ not maintained.
 The request will fail if any of the attributes already exist in the context. The response highlights which actions have
 been successful and the reason for failure (if any has occurred).
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "success": [
@@ -557,7 +557,7 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` is returned as _concise_ N
 because `options=sysAttrs`. By default the `@context` is returned in the payload body (although this could be moved due
 to content negotiation if the `Accept:application/json` had been set). The full response is shown below:
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "id": "urn:ngsi-ld:TemperatureSensor:001",
@@ -609,7 +609,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response is shown below:
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "id": "urn:ngsi-ld:TemperatureSensor:001",
@@ -719,7 +719,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 On start-up the context was empty, four **TemperatureSensor** entities have been added by create operations so the full
 context will now contain four sensors.
 
-```jsonld
+```json
 [
     {
         "@context": "http://context/ngsi-context.jsonld",

@@ -1,4 +1,4 @@
-# Concise NGSI-LD[<img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"  align="left" />](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.07.01_60/gs_cim009v010701p.pdf)[<img src="https://fiware.github.io/tutorials.Concise-Format/img/fiware.png" align="left" width="162">](https://www.fiware.org/)<br/>
+# Concise NGSI-LD[<img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"  align="left" />](https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf)[<img src="https://fiware.github.io/tutorials.Concise-Format/img/fiware.png" align="left" width="162">](https://www.fiware.org/)<br/>
 
 [![FIWARE Core Context Management](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/core.svg)](https://github.com/FIWARE/catalogue/blob/master/core/README.md)
 [![License: MIT](https://img.shields.io/github/license/fiware/tutorials.Concise-Format.svg)](https://opensource.org/licenses/MIT)
@@ -496,7 +496,7 @@ NGSI-LD を使用してアレイを追加する場合は注意が必要です。
 属性のいずれかがコンテキストにすでに存在する場合、リクエストは失敗します。レスポンスは、成功したアクションと失敗の理由
 (発生した場合) を強調表示します。
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "success": [
@@ -590,7 +590,7 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` は _concise_ NGSI-LD と�
 `Accept:application/json` が設定されている場合、コンテンツ・ネゴシエーションのために移動される可能性があります)。
 完全なレスポンスを以下に示します:
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "id": "urn:ngsi-ld:TemperatureSensor:001",
@@ -644,7 +644,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 センサ `urn:ngsi-ld:TemperatureSensor:001` は25°Cで読み取ります。レスポンスを以下に示します:
 
-```jsonld
+```json
 {
     "@context": "http://context/ngsi-context.jsonld",
     "id": "urn:ngsi-ld:TemperatureSensor:001",
@@ -760,7 +760,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 起動時にコンテキストが空でしたが、作成操作によって4つの **TemperatureSensor** エンティティが追加されたため、完全な
 コンテキストに4つのセンサが含まれるようになります。
 
-```jsonld
+```json
 [
     {
         "@context": "http://context/ngsi-context.jsonld",
