@@ -20,21 +20,21 @@ EOF
 
 function addCondition()
 {
-  animals="$animals \"sex\": { \"type\": \"Property\", \"value\": \"$1\"},"
+  animals="$animals \"sex\": { \"type\": \"VocabularyProperty\", \"vocab\": \"$1\"},"
   if [ "$1" == "male" ]; then
-    animals="$animals \"phenologicalCondition\": { \"type\": \"Property\", \"value\": \"maleAdult\"},";
-    animals="$animals \"reproductiveCondition\": { \"type\": \"Property\", \"value\": \"active\"},";
+    animals="$animals \"phenologicalCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"maleAdult\"},";
+    animals="$animals \"reproductiveCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"active\"},";
   else
-    animals="$animals \"phenologicalCondition\": { \"type\": \"Property\", \"value\": \"femaleAdult\"},";
+    animals="$animals \"phenologicalCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"femaleAdult\"},";
 
     if [ $((count%11)) -eq 0 ]; then
-       animals="$animals \"reproductiveCondition\": { \"type\": \"Property\", \"value\": \"inactive\"},";
+       animals="$animals \"reproductiveCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"inactive\"},";
     elif [ $((count%7)) -eq 0 ]; then
-       animals="$animals \"reproductiveCondition\": { \"type\": \"Property\", \"value\": \"inHeat\"},";
+       animals="$animals \"reproductiveCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"inHeat\"},";
     elif [ $((count%5)) -eq 0 ]; then
-       animals="$animals \"reproductiveCondition\": { \"type\": \"Property\", \"value\": \"inCalf\"},";
+       animals="$animals \"reproductiveCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"inCalf\"},";
     else 
-      animals="$animals \"reproductiveCondition\": { \"type\": \"Property\", \"value\": \"active\"},";
+      animals="$animals \"reproductiveCondition\": { \"type\": \"VocabularyProperty\", \"vocab\": \"active\"},";
     fi
   fi
 }
