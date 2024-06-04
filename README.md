@@ -308,7 +308,8 @@ repository:
 ```
 
 > [!NOTE]
->  If you want to clean up and start over again you can do so with the following command:
+>
+> If you want to clean up and start over again you can do so with the following command:
 >
 > ```console
 > ./services stop
@@ -469,8 +470,7 @@ using NGSI-LD due to the existing constraints of JSON-LD. Effectively there is n
 entry `"category": ["sensor"]` and a simple string value `"category": "sensor"`. Furthermore, order within the array is
 not maintained.
 
-> [!NOTE]
-> In NGSI-LD, an ordered array value could be encoded as a JSON Literal
+> [!NOTE] In NGSI-LD, an ordered array value could be encoded as a JSON Literal
 > `"category" : {"@type": "@json", "@value":[1,2,3]}`.
 
 The request will fail if any of the attributes already exist in the context. The response highlights which actions have
@@ -730,7 +730,7 @@ context will now contain four sensors.
         "@context": "http://context/ngsi-context.jsonld",
         "id": "urn:ngsi-ld:TemperatureSensor:004",
         "type": "TemperatureSensor",
-        "category":  "sensor",
+        "category": "sensor",
         "temperature": {
             "value": 100,
             "unitCode": "CEL"
