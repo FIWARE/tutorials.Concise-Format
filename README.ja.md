@@ -360,7 +360,7 @@ Bash script を実行することにより、コマンドラインからすべ�
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
       "id": "urn:ngsi-ld:TemperatureSensor:001",
       "type": "TemperatureSensor",
@@ -384,7 +384,7 @@ GET リクエストを行うことで、コンテキスト内で新しい **Temp
 
 ```console
 curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
 <a name="create-new-attributes"></a>
@@ -399,7 +399,7 @@ curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
        "batteryLevel": {
             "value": 0.8,
@@ -428,7 +428,7 @@ GET リクエストを行うことで、コンテキスト内で新しい **Temp
 
 ```console
 curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
 ご覧のとおり、エンティティに2つの追加属性 (`batteryLevel` と `ControlledAsset`) が追加されています。これらの属性は、
@@ -446,7 +446,7 @@ curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/ld+json' \
 --data-raw '[
     {
@@ -496,7 +496,10 @@ NGSI-LD を使用してアレイを追加する場合は注意が必要です。
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "success": [
         "urn:ngsi-ld:TemperatureSensor:002",
         "urn:ngsi-ld:TemperatureSensor:003",
@@ -521,7 +524,7 @@ NGSI-LD を使用してアレイを追加する場合は注意が必要です。
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/ld+json' \
 --data-raw '[
     {
@@ -577,7 +580,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'options=concise,sysAttrs'
 ```
 
@@ -590,7 +593,10 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` は _concise_ NGSI-LD と�
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "id": "urn:ngsi-ld:TemperatureSensor:001",
     "type": "TemperatureSensor",
     "createdAt": "2020-08-27T14:33:06Z",
@@ -634,7 +640,7 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` は _concise_ NGSI-LD と�
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'attrs=temperature'
 ```
 
@@ -644,7 +650,10 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "id": "urn:ngsi-ld:TemperatureSensor:001",
     "type": "TemperatureSensor",
     "temperature": {
@@ -669,7 +678,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'options=concise'
 ```
@@ -714,7 +723,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'options=concise' \
 -d 'attrs=category,temperature'
@@ -748,7 +757,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatu
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'type=TemperatureSensor' \
 -d 'options=concise'
 ```
@@ -761,7 +770,10 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 ```json
 [
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:004",
         "type": "TemperatureSensor",
         "category":  "sensor",
@@ -771,7 +783,10 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:002",
         "type": "TemperatureSensor",
         "category": "sensor",
@@ -781,7 +796,10 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:003",
         "type": "TemperatureSensor",
         "category": "sensor",
@@ -792,7 +810,10 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:001",
         "type": "TemperatureSensor",
         "batteryLevel": {
@@ -821,7 +842,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'type=TemperatureSensor' \
 -d 'options=concise' \
@@ -884,9 +905,9 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
 #### 1️⃣3️⃣ リクエスト:
 
 ```console
-curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
--H 'Accept: 'application/json' \
+curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Accept: application/json' \
 -d 'id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002' \
 -d 'attrs=temperature' \
 -d 'options=concise'
@@ -928,7 +949,7 @@ curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
 
 ```console
 curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/geo+json' \
 -H 'NGSILD-Tenant: openiot' \
 -d 'id=urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006' \
@@ -974,7 +995,10 @@ curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
                     "observedAt": "2022-03-01T15:49:57.039Z"
                 }
             },
-            "@context": "http://context/ngsi-context.jsonld",
+            "@context": [
+                "http://context/user-context.jsonld",
+                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+            ],
             "geometry": {
                 "type": "Point",
                 "coordinates": [13.346, 52.52]
@@ -1010,7 +1034,10 @@ curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
                     "observedAt": "2022-03-01T15:49:57.287Z"
                 }
             },
-            "@context": "http://context/ngsi-context.jsonld",
+            "@context": [
+                "http://context/user-context.jsonld",
+                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+            ],
             "geometry": {
                 "type": "Point",
                 "coordinates": [13.347, 52.522]
@@ -1040,7 +1067,7 @@ curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
     "value": ["sensor", "actuator"]
 }'
@@ -1062,7 +1089,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
       "category": {
             "value": [
@@ -1087,7 +1114,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '[
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
@@ -1126,7 +1153,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '[
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
@@ -1180,7 +1207,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
       "accept": "application/geo+json"
     }
   },
-   "@context": "http://context/ngsi-context.jsonld"
+   "@context": "http://context/user-context.jsonld"
 }'
 ```
 
@@ -1196,7 +1223,10 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
     "id": "urn:ngsi-ld:Notification:6220b4e464f3729a8527f8a0",
     "type": "Notification",
     "subscriptionId": "urn:ngsi-ld:Subscription:6220b4a964f3729a8527f88c",
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "notifiedAt": "2022-03-03T12:30:28.237Z",
     "data": [
         {
@@ -1255,7 +1285,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
       "accept": "application/geo+json"
     }
   },
-   "@context": "http://context/ngsi-context.jsonld"
+   "@context": "http://context/user-context.jsonld"
 }'
 ```
 
@@ -1302,7 +1332,10 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
                         }
                     }
                 },
-                "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+                "@context": [
+                    "http://context/user-context.jsonld",
+                    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+                ],
                 "geometry": {
                     "value": {
                         "type": "Point",

@@ -347,7 +347,7 @@ This example adds a new **TemperatureSensor** entity to the context.
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
       "id": "urn:ngsi-ld:TemperatureSensor:001",
       "type": "TemperatureSensor",
@@ -371,7 +371,7 @@ the full normalized form:
 
 ```console
 curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
 ### Create New Attributes
@@ -384,7 +384,7 @@ This example adds a new `batteryLevel` Property and a `controlledAsset` Relation
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
        "batteryLevel": {
             "value": 0.8,
@@ -413,7 +413,7 @@ You can check to see if the new **TemperatureSensor** can be found in the contex
 
 ```console
 curl -L -X GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
 ```
 
 As you can see there are now two additional attributes (`batteryLevel` and `controlledAsset`) added to the entity. These
@@ -430,7 +430,7 @@ context. Batch create uses the `/ngsi-ld/v1/entityOperations/create` endpoint.
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/ld+json' \
 --data-raw '[
     {
@@ -481,7 +481,10 @@ been successful and the reason for failure (if any has occurred).
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "success": [
         "urn:ngsi-ld:TemperatureSensor:002",
         "urn:ngsi-ld:TemperatureSensor:003",
@@ -504,7 +507,7 @@ context.
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/ld+json' \
 --data-raw '[
     {
@@ -555,7 +558,7 @@ format.
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'options=concise,sysAttrs'
 ```
 
@@ -567,7 +570,10 @@ to content negotiation if the `Accept:application/json` had been set). The full 
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "id": "urn:ngsi-ld:TemperatureSensor:001",
     "type": "TemperatureSensor",
     "createdAt": "2020-08-27T14:33:06Z",
@@ -609,7 +615,7 @@ known `id`.
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'attrs=temperature'
 ```
 
@@ -619,7 +625,10 @@ The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response
 
 ```json
 {
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "id": "urn:ngsi-ld:TemperatureSensor:001",
     "type": "TemperatureSensor",
     "temperature": {
@@ -642,7 +651,7 @@ known `id`.
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'options=concise'
 ```
@@ -685,7 +694,7 @@ This example reads the value of two attributes (`category` and `temperature`) fr
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'options=concise' \
 -d 'attrs=category,temperature'
@@ -717,7 +726,7 @@ This example lists the full context of all **TemperatureSensor** entities.
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -d 'type=TemperatureSensor' \
 -d 'options=concise'
 ```
@@ -730,7 +739,10 @@ context will now contain four sensors.
 ```json
 [
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:004",
         "type": "TemperatureSensor",
         "category": "sensor",
@@ -740,7 +752,10 @@ context will now contain four sensors.
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:002",
         "type": "TemperatureSensor",
         "category": "sensor",
@@ -750,7 +765,10 @@ context will now contain four sensors.
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:003",
         "type": "TemperatureSensor",
         "category": "sensor",
@@ -761,7 +779,10 @@ context will now contain four sensors.
         }
     },
     {
-        "@context": "http://context/ngsi-context.jsonld",
+        "@context": [
+            "http://context/user-context.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+        ],
         "id": "urn:ngsi-ld:TemperatureSensor:001",
         "type": "TemperatureSensor",
         "batteryLevel": {
@@ -788,7 +809,7 @@ This example lists the `temperature` attribute of all **TemperatureSensor** enti
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'type=TemperatureSensor' \
 -d 'options=concise' \
@@ -849,7 +870,7 @@ unique, so `type` is not required for this request. To filter by `id` add the en
 
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/'' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: 'application/json' \
 -d 'id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002' \
 -d 'attrs=temperature' \
@@ -890,7 +911,7 @@ The concise format is also available for the GeoJSON format which can be request
 
 ```console
 curl -G -iX GET 'http://localhost:1026//ngsi-ld/v1/entities/' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/geo+json' \
 -H 'NGSILD-Tenant: openiot' \
 -d 'id=urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006' \
@@ -936,7 +957,10 @@ The response details the selected attributes from the selected entities is retur
                     "observedAt": "2022-03-01T15:49:57.039Z"
                 }
             },
-            "@context": "http://context/ngsi-context.jsonld",
+            "@context": [
+                "http://context/user-context.jsonld",
+                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+            ],
             "geometry": {
                 "type": "Point",
                 "coordinates": [13.346, 52.52]
@@ -972,7 +996,10 @@ The response details the selected attributes from the selected entities is retur
                     "observedAt": "2022-03-01T15:49:57.287Z"
                 }
             },
-            "@context": "http://context/ngsi-context.jsonld",
+            "@context": [
+                "http://context/user-context.jsonld",
+                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+            ],
             "geometry": {
                 "type": "Point",
                 "coordinates": [13.347, 52.522]
@@ -998,7 +1025,7 @@ This example updates the value of the `category` attribute of the Entity with `i
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs/category' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
     "value": ["sensor", "actuator"]
 }'
@@ -1018,7 +1045,7 @@ with `id=urn:ngsi-ld:TemperatureSensor:001`.
 ```console
 curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/attrs' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
       "category": {
             "value": [
@@ -1041,7 +1068,7 @@ This example uses the convenience batch processing endpoint to update existing s
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert?options=update' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '[
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
@@ -1078,7 +1105,7 @@ This example uses the convenience batch processing endpoint to replace entity da
 ```console
 curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=replace' \
 -H 'Content-Type: application/json' \
--H 'Link: <http://context/ngsi-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+-H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '[
   {
     "id": "urn:ngsi-ld:TemperatureSensor:003",
@@ -1128,7 +1155,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
       "accept": "application/geo+json"
     }
   },
-   "@context": "http://context/ngsi-context.jsonld"
+   "@context": "http://context/user-context.jsonld"
 }'
 ```
 
@@ -1144,7 +1171,10 @@ barn. Eventually a request is sent to `subscription/low-stock-farm001` as shown:
     "id": "urn:ngsi-ld:Notification:6220b4e464f3729a8527f8a0",
     "type": "Notification",
     "subscriptionId": "urn:ngsi-ld:Subscription:6220b4a964f3729a8527f88c",
-    "@context": "http://context/ngsi-context.jsonld",
+    "@context": [
+        "http://context/user-context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+    ],
     "notifiedAt": "2022-03-03T12:30:28.237Z",
     "data": [
         {
@@ -1201,7 +1231,7 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
       "accept": "application/geo+json"
     }
   },
-   "@context": "http://context/ngsi-context.jsonld"
+   "@context": "http://context/user-context.jsonld"
 }'
 ```
 
@@ -1248,7 +1278,10 @@ The result of a concise GeoJSON notification can be seen below.
                         }
                     }
                 },
-                "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld",
+                "@context": [
+                    "http://context/user-context.jsonld",
+                    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
+                ],
                 "geometry": {
                     "value": {
                         "type": "Point",
