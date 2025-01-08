@@ -1361,4 +1361,4 @@ curl -X POST 'http://{{orion}}/ngsi-ld/v1/subscriptions/' \
 
 ## License
 
-[MIT](LICENSE) © 2022-2024 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2022-2025 FIWARE Foundation e.V.
