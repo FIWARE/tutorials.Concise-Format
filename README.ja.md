@@ -452,7 +452,9 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
     {
       "id": "urn:ngsi-ld:TemperatureSensor:002",
       "type": "TemperatureSensor",
-      "category": ["sensor"],
+      "category": {
+        "vocab": ["sensor"]
+      },
       "temperature": {
             "value": 20,
             "unitCode": "CEL"
@@ -461,7 +463,9 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
     {
       "id": "urn:ngsi-ld:TemperatureSensor:003",
       "type": "TemperatureSensor",
-      "category":  ["sensor" , "actuator"],
+      "category": {
+        "vocab": ["sensor" , "actuator"]
+      },
       "temperature": {
             "value": 2,
             "unitCode": "CEL"
@@ -471,8 +475,8 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/create' \
       "id": "urn:ngsi-ld:TemperatureSensor:004",
       "type": "TemperatureSensor",
       "category": {
-            "type": "Property",
-            "value": "sensor"
+            "type": "VocabProperty",
+            "vocab": "sensor"
       },
       "temperature": {
             "type": "Property",
@@ -604,7 +608,7 @@ TemperatureSensor `urn:ngsi-ld:TemperatureSensor:001` は _concise_ NGSI-LD と�
     "category": {
         "createdAt": "2020-08-27T14:33:06Z",
         "modifiedAt": "2020-08-27T14:33:06Z",
-        "value": "sensor"
+        "vocab": "sensor"
     },
     "temperature": {
         "createdAt": "2020-08-27T14:33:06Z",
@@ -1069,7 +1073,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 -H 'Content-Type: application/json' \
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
-    "value": ["sensor", "actuator"]
+    "vocab": ["sensor", "actuator"]
 }'
 ```
 
@@ -1092,7 +1096,7 @@ curl -iX PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperatur
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
       "category": {
-            "value": [
+            "vocab": [
                   "sensor",
                   "actuator"
             ]
