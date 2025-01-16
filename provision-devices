@@ -39,7 +39,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Temperature Sensor"},
-        {"name": "category", "type":"VocabProperty", "value": ["sensor"]},
+        {"name": "category", "type":"Property", "value": ["sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": "temperature"},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
       ]
@@ -59,7 +59,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Soil Humdity Sensor"},
-        {"name": "category", "type":"VocabProperty", "value": ["sensor"]},
+        {"name": "category", "type":"Property", "value": ["sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": "humidity"},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
       ]
@@ -84,7 +84,7 @@ curl -s -o /dev/null -X POST \
       "static_attributes": [
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]},
         {"name": "description", "type":"Property", "value": "Barn filling Sensor"},
-        {"name": "category", "type":"VocabProperty", "value": ["actuator", "sensor"]},
+        {"name": "category", "type":"Property", "value": ["actuator", "sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": ["filling"]}
       ]
    },
@@ -106,7 +106,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Animal Collar"},
-        {"name": "category", "type":"VocabProperty", "value": ["sensor"]},
+        {"name": "category", "type":"Property", "value": ["sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": ["heartRate", "location", "status"]},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
       ]
@@ -129,7 +129,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Animal Collar"},
-        {"name": "category", "type":"VocabProperty", "value": ["sensor"]},
+        {"name": "category", "type":"Property", "value": ["sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": ["heartRate", "location", "status"]},
         {"name": "function", "type": "Property", "value":["sensing"]},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
@@ -149,7 +149,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Irrigation System"},
-        {"name": "category", "type":"VocabProperty", "value": ["actuator"]},
+        {"name": "category", "type":"Property", "value": ["actuator"]},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
       ]
    },
@@ -172,7 +172,7 @@ curl -s -o /dev/null -X POST \
       ],
       "static_attributes": [
         {"name": "description", "type":"Property", "value": "Tractor FMIS"},
-        {"name": "category", "type":"VocabProperty", "value": ["actuator", "sensor"]},
+        {"name": "category", "type":"Property", "value": ["actuator", "sensor"]},
         {"name": "controlledProperty", "type": "Property", "value": ["location", "status"]},
         {"name": "supportedProtocol", "type": "Property", "value": ["ul20"]}
       ]
