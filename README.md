@@ -387,7 +387,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Temperature
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 --data-raw '{
        "batteryLevel": {
-            "value": 0.8,
+            "value": 0.9,
             "unitCode": "C62"
       },
       "controlledAsset": {
@@ -484,18 +484,11 @@ The request will fail if any of the attributes already exist in the context. The
 been successful and the reason for failure (if any has occurred).
 
 ```json
-{
-    "@context": [
-        "http://context/user-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"
-    ],
-    "success": [
+[
         "urn:ngsi-ld:TemperatureSensor:002",
         "urn:ngsi-ld:TemperatureSensor:003",
         "urn:ngsi-ld:TemperatureSensor:004"
-    ],
-    "errors": []
-}
+]
 ```
 
 ### Batch Create/Overwrite New Data Entities
@@ -594,7 +587,7 @@ to content negotiation if the `Accept:application/json` had been set). The full 
         "unitCode": "CEL"
     },
     "batteryLevel": {
-        "value": 0.8,
+        "value": 0.9,
         "createdAt": "2020-08-27T14:33:10Z",
         "modifiedAt": "2020-08-27T14:33:10Z",
         "unitCode": "C62"
@@ -620,7 +613,8 @@ known `id`.
 ```console
 curl -G -iX GET 'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
--d 'attrs=temperature'
+-d 'attrs=temperature' \
+-d 'options=concise'
 ```
 
 #### Response:
@@ -674,7 +668,7 @@ The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response
         "unitCode": "CEL"
     },
     "batteryLevel": {
-        "value": 0.8,
+        "value": 0.9,
         "unitCode": "C62"
     },
     "controlledAsset": {
@@ -790,7 +784,7 @@ context will now contain four sensors.
         "id": "urn:ngsi-ld:TemperatureSensor:001",
         "type": "TemperatureSensor",
         "batteryLevel": {
-            "value": 0.8,
+            "value": 0.9,
             "unitCode": "C62"
         },
         "category": "sensor",
