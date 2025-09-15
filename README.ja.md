@@ -588,7 +588,8 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/upsert' \
 curl -G -iX GET \
   'http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001' \
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
--d 'options=concise,sysAttrs'
+-d 'options=sysAttrs' \
+-d 'format=concise'
 ```
 
 #### レスポンス:
