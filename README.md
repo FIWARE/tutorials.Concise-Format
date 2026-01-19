@@ -486,11 +486,7 @@ The request will fail if any of the attributes already exist in the context. The
 been successful and the reason for failure (if any has occurred).
 
 ```json
-[
-        "urn:ngsi-ld:TemperatureSensor:002",
-        "urn:ngsi-ld:TemperatureSensor:003",
-        "urn:ngsi-ld:TemperatureSensor:004"
-]
+["urn:ngsi-ld:TemperatureSensor:002", "urn:ngsi-ld:TemperatureSensor:003", "urn:ngsi-ld:TemperatureSensor:004"]
 ```
 
 ### Batch Create/Overwrite New Data Entities
@@ -642,9 +638,9 @@ The sensor `urn:ngsi-ld:TemperatureSensor:001` is reading at 25°C. The response
 }
 ```
 
-Because `format=concise` was used this is response includes the metadata such as `unitCode` but not
-`"type": "Property"` Context data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>`
-endpoint and selecting the `attrs` using a comma separated list.
+Because `format=concise` was used this is response includes the metadata such as `unitCode` but not `"type": "Property"`
+Context data can be retrieved by making a GET request to the `/ngsi-ld/v1/entities/<entity-id>` endpoint and selecting
+the `attrs` using a comma separated list.
 
 ### Read a Data Entity (concise)
 
@@ -954,7 +950,7 @@ The response details the selected attributes from the selected entities is retur
                     "vocab": "femaleAdult"
                 },
                 "reproductiveCondition": {
-                    "vocab":  "active"
+                    "vocab": "active"
                 },
                 "name": "Carnation",
                 "legalID": "M-sow010-Carnation",
@@ -1332,4 +1328,4 @@ the other [tutorials in this series](https://ngsi-ld-tutorials.rtfd.io)
 
 ## License
 
-[MIT](LICENSE) © 2022-2025 FIWARE Foundation e.V.
+[MIT](LICENSE) © 2022-2026 FIWARE Foundation e.V.
