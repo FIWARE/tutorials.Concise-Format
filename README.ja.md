@@ -95,14 +95,14 @@ NGSI-LD API は、複数の形式でコンテキスト・データを生成す�
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
-    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "id": "urn:ngsi-ld:Beatle:John_Lennon",
     "type": "Beatle",
     "age": { "type": "Property", "value": 40, "unitCode": "ANN" },
     "name": { "type": "Property", "value": "John Lennon" },
     "born": { "type": "Property", "value": "1940-10-09" },
     "spouse": {
         "type": "Relationship",
-        "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+        "object": "urn:ngsi-ld:Person:Cynthia_Lennon"
     },
     "location": {
         "type": "GeoProperty",
@@ -133,10 +133,10 @@ NGSI-LD API は、複数の形式でコンテキスト・データを生成す�
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
-    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "id": "urn:ngsi-ld:Beatle:John_Lennon",
     "name": "John Lennon",
     "born": "1940-10-09",
-    "spouse": "urn:nsgi-ld:Person:Cynthia_Lennon",
+    "spouse": "urn:ngsi-ld:Person:Cynthia_Lennon",
     "age": 40,
     "location": {
         "type": "Point",
@@ -176,11 +176,11 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
         "https://fiware.github.io/tutorials.Step-by-Step/example.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
     ],
-    "id": "urn:nsgi-ld:Beatle:John_Lennon",
+    "id": "urn:ngsi-ld:Beatle:John_Lennon",
     "name": "John Lennon",
     "born": "1940-10-09",
     "spouse": {
-        "object": "urn:nsgi-ld:Person:Cynthia_Lennon"
+        "object": "urn:ngsi-ld:Person:Cynthia_Lennon"
     },
     "age": { "value": 40, "unitCode": "ANN" },
     "location": {
