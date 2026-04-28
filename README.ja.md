@@ -205,7 +205,7 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
 このチュートリアルの目的のために、一連のダミーの農業用 IoT デバイスが作成され、Context Broker に接続されます。使用
 されているアーキテクチャとプロトコルの詳細は、
 [IoT センサ・チュートリアル](https://github.com/FIWARE/tutorials.IoT-Sensors/tree/NGSI-LD)にあります。各デバイスの
-状態は、 UltraLight デバイス・モニタの Web ページは次の場所にあります: `http://localhost:3000/device/monitor`
+状態は、 JSON デバイス・モニタの Web ページは次の場所にあります: `http://localhost:3000/device/monitor`
 
 ![FIWARE Monitor](https://fiware.github.io/tutorials.Concise-Format/img/farm-devices.png)
 
@@ -217,7 +217,7 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
 
 このアプリケーションは、[以前のチュートリアル](https://github.com/FIWARE/tutorials.IoT-Agent/)で作成したコンポーネント
 とダミーの IoT デバイスに基づいて構築されています。[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/)
-と [IoT Agent for Ultralight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/) の2つの FIWARE コンポーネントを
+と [IoT Agent for JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/) の2つの FIWARE コンポーネントを
 使用します。
 
 したがって、アーキテクチャ全体は次の要素で構成されます:
@@ -227,10 +227,10 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
     -   [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/) は、
         [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
         を使用してリクエストを受信します
-    -   FIWARE [IoT Agent for UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/) は、
+    -   FIWARE [IoT Agent for JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/) は、
         [NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)
         を使用してサウスバウンド・リクエストを受信し、それらをデバイスの
-        [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+        [JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
        コマンドに変換します
 
 -   [MongoDB](https://www.mongodb.com/) データベース:
@@ -243,7 +243,7 @@ API を使いやすくし、開発者の負担を軽減するために、NGSI-LD
 
 -   **チュートリアル・アプリケーション**は、以下のことを行います:
     -   HTTP を介して実行される
-        [UltraLight 2.0](https://fiware-iotagent-ul.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
+        [JSON](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual/index.html#user-programmers-manual)
         プロトコルを使用して、ダミーの[農業 IoT デバイス](https://github.com/FIWARE/tutorials.IoT-Sensors/tree/NGSI-LD)
         のセットとして機能します
 
