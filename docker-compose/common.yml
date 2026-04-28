@@ -35,7 +35,22 @@ services:
     healthcheck:
       test: (wget --server-response --spider --quiet  http://context/user-context.jsonld 2>&1 | awk 'NR==1{print $$2}'|  grep -q -e "200") || exit 1
 
-  # Databases
+  # Cache for Sensor Data Readings
+  redis-sensors:
+    labels:
+      org.fiware: 'tutorial'
+    image: redis:8.2.0-alpine
+    container_name: redis
+    hostname: redis-for-sensors
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 10s
+
+    # Databases
   mongo-db:
     labels:
       org.fiware: 'tutorial'
@@ -55,7 +70,7 @@ services:
       test: ["CMD","mongosh", "localhost:27017/test", "--quiet"]
       interval: 5s
 
-  # IoT-Agent is configured for the UltraLight Protocol
+  # IoT-Agent is configured for the JSON Protocol
   iot-agent:
     labels:
       org.fiware: 'tutorial'
@@ -97,6 +112,32 @@ services:
     healthcheck:
       interval: 30s
 
+  
+   # A series of dummy IoT Sensors over HTTP
+  iot-sensors:
+    labels:
+      org.fiware: 'tutorial'
+    image: quay.io/fiware/tutorials.iot-devices
+    hostname: iot-sensors
+    container_name: fiware-iot-devices
+    depends_on:
+      - redis-sensors
+    networks:
+      - default
+    expose:
+      - "${TUTORIAL_DUMMY_DEVICE_PORT}"
+    ports:
+      - "${TUTORIAL_DUMMY_DEVICE_PORT}:${TUTORIAL_DUMMY_DEVICE_PORT}" # localhost:3001
+    environment:
+      - DEBUG=devices:*
+      - WEB_APP_HOST=tutorial
+      - WEB_APP_PORT=${TUTORIAL_APP_PORT} # Port used by the content provider proxy and web-app for viewing data
+      - IOTA_HTTP_HOST=iot-agent
+      - IOTA_HTTP_PORT=${IOTA_SOUTH_PORT}
+      - IOTA_DEFAULT_RESOURCE=/iot/json
+      - REDIS_HOST=redis-for-sensors
+      - DUMMY_DEVICES_PAYLOAD=JSON
+
   # Tutorial acts as a Farm Management Information System
   tutorial:
     labels:
@@ -132,6 +173,7 @@ networks:
 volumes:
   mongo-db: ~
   mongo-config: ~
+  redis-data: ~
   data-models:
     driver: local
     driver_opts:
