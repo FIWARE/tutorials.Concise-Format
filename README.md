@@ -916,7 +916,7 @@ The concise format is also available for the GeoJSON format which can be request
 
 ```console
 curl -G -iX GET \
-  'http://localhost:1026//ngsi-ld/v1/entities/' \
+  'http://localhost:1026/ngsi-ld/v1/entities/' \
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/geo+json' \
 -H 'NGSILD-Tenant: openiot' \
@@ -1141,7 +1141,7 @@ curl -iX POST 'http://localhost:1026/ngsi-ld/v1/entityOperations/update?options=
     "type": "TemperatureSensor",
     "temperature": {
       "value": 16,
-      "unitCode": "CEL"
+      "unitCode": "CEL",
       "observedAt": "2022-03-01T15:00:00.000Z"
     }
   }
