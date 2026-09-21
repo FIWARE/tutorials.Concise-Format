@@ -212,7 +212,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?options=normalized",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?format=normalized",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -246,7 +246,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?attrs=temperature&options=concise",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001?attrs=temperature&format=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -332,7 +332,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?options=concise&attrs=category,temperature,controlledAsset",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/urn:ngsi-ld:TemperatureSensor:001/?format=concise&attrs=category,temperature,controlledAsset",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -372,7 +372,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=concise",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=TemperatureSensor&format=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -416,7 +416,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=TemperatureSensor&options=concise&attrs=temperature,",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=TemperatureSensor&format=concise&attrs=temperature,",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -470,7 +470,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Animal&options=concise",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?type=Animal&format=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -515,7 +515,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&options=concise",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002&format=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -532,6 +532,10 @@
 									"value": "urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002"
 								},
 								{
+									"key": "local",
+									"value": "true"
+								},
+								{
 									"key": "format",
 									"value": "concise"
 								},
@@ -542,7 +546,7 @@
 								}
 							]
 						},
-						"description": "This example lists selected data from two **TemperatureSensor** entities chosen by `id`. Note that every `id` must be\nunique, so `type` is not required for this request. To filter by `id` add the entries in a comma delimted list.\n\nThe response details the selected attributes from the selected entities."
+						"description": "This example lists selected data from two **TemperatureSensor** entities chosen by `id`. Note that every `id` must be\nunique, so `type` is not required for this request. To filter by `id` add the entries in a comma delimted list.\n\nA list of `id` values is not on its own enough to make a query. NGSI-LD requires at least one of `type`, `attrs`, `q`, a GeoQuery or `local=true`, and raises `BadRequestData` (\"too wide query\") without one, `pick` does not count, so `local=true` is used here because it satisfies the requirement without naming a `type`.\n\nThe response details the selected attributes from the selected entities."
 					},
 					"response": []
 				},
@@ -569,7 +573,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006&options=concise",
+							"raw": "http://{{orion}}/ngsi-ld/v1/entities/?id=urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006&format=concise",
 							"protocol": "http",
 							"host": [
 								"{{orion}}"
@@ -584,6 +588,10 @@
 								{
 									"key": "id",
 									"value": "urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006"
+								},
+								{
+									"key": "local",
+									"value": "true"
 								},
 								{
 									"key": "format",

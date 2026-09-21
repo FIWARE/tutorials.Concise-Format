@@ -91,7 +91,7 @@ payloads are exceedingly regular and parseable, and can easily be reduced down t
 an operation necessary. However with the normalized format, is necessary to repeatedly supply common defining attributes
 such as `"type": "Property"` throughout the payload to ensure that machines can fully understand the data represented.
 
-#### Normalized NGSI-LD using `options=normalized`
+#### Normalized NGSI-LD using `format=normalized`
 
 ```json
 {

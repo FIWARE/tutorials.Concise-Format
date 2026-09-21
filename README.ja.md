@@ -87,7 +87,7 @@ NGSI-LD API は、複数の形式でコンテキスト・データを生成す�
 場合は、関連する `value` 要素に簡単に減らすことができます。ただし、正規化された形式では、マシンが表現されたデータを
 完全に理解できるように、ペイロード全体で `"type": "Property"`などの共通の定義属性を繰り返し提供する必要があります。
 
-#### `options=normalized` 使用して正規化された NGSI-LD
+#### `format=normalized` 使用して正規化された NGSI-LD
 
 ```json
 {
@@ -915,6 +915,10 @@ curl -G -iX GET \
 すべての `id` は一意である必要があるため、このリクエストには `type` は必要ありません。`id` でフィルタリングするには、
 カンマ区切りのリストにエントリを追加します。
 
+`id` のリストだけではクエリとして十分ではありません。NGSI-LD では `type`、`attrs`、`q`、GeoQuery、`local=true` の
+いずれか一つが必要であり、指定がない場合は `BadRequestData`(「too wide query」)が発生します。`pick` はこの要件を
+満たさないため、ここでは `type` を指定せずに要件を満たす `local=true` を使用しています。
+
 #### 1️⃣3️⃣ リクエスト:
 
 ```console
@@ -923,6 +927,7 @@ curl -G -iX GET \
 -H 'Link: <http://context/user-context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
 -H 'Accept: application/json' \
 -d 'id=urn:ngsi-ld:TemperatureSensor:001,urn:ngsi-ld:TemperatureSensor:002' \
+-d 'local=true' \
 -d 'pick=id,type,temperature' \
 -d 'format=concise'
 ```
@@ -968,6 +973,7 @@ curl -G -iX GET \
 -H 'Accept: application/geo+json' \
 -H 'NGSILD-Tenant: openiot' \
 -d 'id=urn:ngsi-ld:Animal:pig010,urn:ngsi-ld:Animal:pig006' \
+-d 'local=true' \
 -d 'format=concise'
 ```
 
